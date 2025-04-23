@@ -70,6 +70,13 @@
     <p>请根据您的专业判断，对以下各季度规划主题进行优先级评分（1-4分，1为最高优先级），并补充您的建议。</p>
     
     <form id="surveyForm" action="https://formsubmit.co/ren_cola@163.com" method="POST">
+            <!-- 确保 method 是 POST -->
+            <!-- 建议添加以下隐藏字段 -->
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_subject" value="新问卷提交">
+            <input type="text" name="_honey" style="display:none">
+        </form>
         <!-- Q1 Section -->
         <h2>第一季度 (Q1)</h2>
         <div class="section-description">
