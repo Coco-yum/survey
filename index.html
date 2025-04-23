@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>规划主题优先级调研问卷</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        h2 {
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .required:after {
+            content: " *";
+            color: red;
+        }
+        .section-description {
+            background-color: #eaf7fd;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 15px;
+        }
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>规划主题优先级调研问卷</h1>
+    
+    <p>请根据您的专业判断，对以下各季度规划主题进行优先级评分（1-4分，1为最高优先级），并补充您的建议。</p>
+    
+    <form id="surveyForm">
+        <!-- Q1 Section -->
+        <h2>第一季度 (Q1)</h2>
+        <div class="section-description">
+            <p>第一季度包含3月份规划主题，请评估以下内容的优先级：</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">编号</th>
+                    <th width="15%">规划主题</th>
+                    <th width="30%">主要内容</th>
+                    <th width="7%">业务复杂度</th>
+                    <th width="10%">优先级</th>
+                    <th width="10%">必要性</th>
+                    <th width="10%">你的优先级评分<br>(1-4分)</th>
+                    <th width="10%">建议补充</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SOP-01</td>
+                    <td>抗菌药品医嘱在临床应用V2.0</td>
+                    <td>基于门诊、住院业务中，根据不同的药品管理模式，药品停用停发停开，药房停用停发停开无库存下业务，及临床业务系统的影响及处理</td>
+                    <td>中</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-01"></td>
+                    <td><input type="number" name="priority_SOP-01" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-01" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+                <tr>
+                    <td>SOP-34</td>
+                    <td>GCP患者门诊住院业务流程</td>
+                    <td>1、化疗业务应用模式；2、日间化疗应用模式；3、日间化疗应用方案推荐</td>
+                    <td>高</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-34"></td>
+                    <td><input type="number" name="priority_SOP-34" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-34" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+                <tr>
+                    <td>SOP-36</td>
+                    <td>日间化疗SOP</td>
+                    <td>1、GCP模式分类（采购卫宁GCP、采购三方GCP、无GCP情况）；2、各类模式在5X和60系上的对比以及实现流程和效果；3、相关GCP项目管理和配置</td>
+                    <td>中</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-36"></td>
+                    <td><input type="number" name="priority_SOP-36" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-36" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+                <tr>
+                    <td>SOP-75</td>
+                    <td>过敏与皮试业务流程V2.0</td>
+                    <td>加强内部和客户对医院减免、记账类需求的理解，方便在业务调研过程中解析其需求，通过案例分析和优惠规则特性快速推荐适用的WiNEX优惠规则。</td>
+                    <td>中</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-75"></td>
+                    <td><input type="number" name="priority_SOP-75" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-75" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Q2 Section -->
+        <h2>第二季度 (Q2)</h2>
+        <div class="section-description">
+            <p>第二季度包含4月份规划主题，请评估以下内容的优先级：</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">编号</th>
+                    <th width="15%">规划主题</th>
+                    <th width="30%">主要内容</th>
+                    <th width="7%">业务复杂度</th>
+                    <th width="10%">现有级别</th>
+                    <th width="10%">必要性</th>
+                    <th width="10%">优先级评分<br>(1-4分)</th>
+                    <th width="10%">建议补充</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SOP-14</td>
+                    <td>不拆零药品管理模式及应用</td>
+                    <td>1、自理药业务模式介绍；2、自理药业务模式使用场景；3、自理药业务方案比较；4、自理药定义态配置</td>
+                    <td>中</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-14"></td>
+                    <td><input type="number" name="priority_SOP-14" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-14" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+                <tr>
+                    <td>SOP-67</td>
+                    <td>住院患者权限管控</td>
+                    <td>1、自备药应用分类；2、院外自备药应用模式；3、自备药业务方案比较；4、自备药应用实现效果</td>
+                    <td>高</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-67"></td>
+                    <td><input type="number" name="priority_SOP-67" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-67" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Q3 Section -->
+        <h2>第三季度 (Q3)</h2>
+        <div class="section-description">
+            <p>第三季度包含8月份规划主题，请评估以下内容的优先级：</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">编号</th>
+                    <th width="15%">规划主题</th>
+                    <th width="30%">主要内容</th>
+                    <th width="7%">业务复杂度</th>
+                    <th width="10%">现有级别</th>
+                    <th width="10%">必要性</th>
+                    <th width="10%">优先级评分<br>(1-4分)</th>
+                    <th width="10%">建议补充</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SOP-10</td>
+                    <td>基数药管理模式</td>
+                    <td>1、基数药的应用背景和场景；2、实现基数药的模式（收费项目模式、常规药品模式、基数药分方模式）3、基数药分方模式在门诊临床科室、住院病区、医技科室、手术室的应用流程；</td>
+                    <td>中</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-10"></td>
+                    <td><input type="number" name="priority_SOP-10" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-10" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Q4 Section -->
+        <h2>第四季度 (Q4)</h2>
+        <div class="section-description">
+            <p>第四季度包含10月份规划主题，请评估以下内容的优先级：</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">编号</th>
+                    <th width="15%">规划主题</th>
+                    <th width="30%">主要内容</th>
+                    <th width="7%">业务复杂度</th>
+                    <th width="10%">现有级别</th>
+                    <th width="10%">必要性</th>
+                    <th width="10%">优先级评分<br>(1-4分)</th>
+                    <th width="10%">建议补充</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SOP-66</td>
+                    <td>优惠规则应用方案</td>
+                    <td>补充V1版本内容，1、皮试模式分类（①线下皮试模式；②先皮试后治疗；③皮试联动治疗；④皮试作为治疗项目）；2、各模式分类的对比及实现效果</td>
+                    <td>中</td>
+                    <td>2</td>
+                    <td><input type="checkbox" name="necessity_SOP-66"></td>
+                    <td><input type="number" name="priority_SOP-66" min="1" max="4" style="width: 50px;"></td>
+                    <td><textarea name="suggestion_SOP-66" rows="2" style="width: 100%;"></textarea></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <button type="submit" class="submit-btn">提交问卷</button>
+    </form>
+
+    <script>
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('感谢您的参与！问卷已提交。');
+            // 这里可以添加实际提交表单的代码
+        });
+    </script>
+</body>
+</html>
