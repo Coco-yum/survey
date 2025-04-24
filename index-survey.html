@@ -1145,9 +1145,9 @@
                 alert('您已经提交过问卷，每个IP地址只能提交一次。');
                 document.getElementById('submitBtn').disabled = true;
                 // 禁用所有表单元素
-                const formElements = document.querySelectorAll('#surveyForm input, #surveyForm textarea, #surveyForm button');
-                formElements.forEach(element => {
-                    element.disabled = true;
+             //   const formElements = document.querySelectorAll('#surveyForm input, #surveyForm textarea, #surveyForm button');
+             //   formElements.forEach(element => {
+              //      element.disabled = true;
                 });
                 return true;
             }
