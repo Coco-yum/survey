@@ -1139,17 +1139,17 @@
         }
 
         // 检查是否已提交过
-        function checkIfSubmitted() {
-            const submitted = localStorage.getItem('surveySubmitted');
-            if (submitted === 'true') {
-                alert('您已经提交过问卷，每个IP地址只能提交一次。');
-                document.getElementById('submitBtn').disabled = true;
+    ////    function checkIfSubmitted() {
+     // //      const submitted = localStorage.getItem('surveySubmitted');
+      ////      if (submitted === 'true') {
+        ////         alert('您已经提交过问卷，每个IP地址只能提交一次。');
+         ////        document.getElementById('submitBtn').disabled = true;
                 // 禁用所有表单元素
              //   const formElements = document.querySelectorAll('#surveyForm input, #surveyForm textarea, #surveyForm button');
              //   formElements.forEach(element => {
               //      element.disabled = true;
-                });
-                return true;
+           ////      });
+            ////     return true;
             }
             return false;
         }
@@ -1195,7 +1195,7 @@
             // 标记为已提交
          ////   localStorage.setItem('surveySubmitted', 'true');
   		 // 动态修改表单的 action（确保 FormSubmit 能处理）
-                this.action = 'https://formsubmit.co/ren_cola@163.com';
+         ////       this.action = 'https://formsubmit.co/ren_cola@163.com';
     
             // 提交表单
             this.submit();
