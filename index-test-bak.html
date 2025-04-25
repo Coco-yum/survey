@@ -108,8 +108,8 @@
         }
         .rating {
             display: flex;
+            flex-direction: row-reverse;
             justify-content: center;
-            gap: 5px;
         }
         .rating input {
             display: none;
@@ -118,6 +118,7 @@
             cursor: pointer;
             font-size: 20px;
             color: #ccc;
+            padding: 0 2px;
         }
         .rating input:checked ~ label {
             color: #f5d442;
@@ -134,6 +135,23 @@
             margin-bottom: 15px;
             border-left: 4px solid #ffeeba;
         }
+        .user-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .user-info label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .user-info input {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -143,8 +161,6 @@
         <strong>重要提示：</strong>本问卷每个IP地址只能提交一次，请确保完成所有季度评估后再提交。提交后将无法修改。
     </div>
     
-    <p>请您根据专业判断，对各季度规划主题进行全面评估。我们特别重视您的宝贵意见，请在满意度评分和补充建议栏中尽可能详细地提供您的看法和建议，包括但不限于：内容改进方向、实际应用场景建议、潜在问题分析等。您的反馈将直接影响我们后续的工作重点和方向。</p>
-    
     <form id="surveyForm" action="https://formsubmit.co/ren_cola@163.com" method="POST">
         <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_template" value="table">
@@ -152,6 +168,17 @@
         <input type="hidden" name="user_ip" id="userIp">
         <input type="hidden" name="submission_time" id="submissionTime">
         <input type="text" name="_honey" style="display:none">
+        
+        <!-- 新增用户信息部分 -->
+        <div class="user-info">
+            <label for="employeeId">工号<span class="required"></span>:</label>
+            <input type="text" id="employeeId" name="employee_id" required>
+            
+            <label for="employeeName">姓名:</label>
+            <input type="text" id="employeeName" name="employee_name">
+        </div>
+        
+        <p>请您根据专业判断，对各季度规划主题进行全面评估。我们特别重视您的宝贵意见，请在满意度评分和补充建议栏中尽可能详细地提供您的看法和建议，包括但不限于：内容改进方向、实际应用场景建议、潜在问题分析等。您的反馈将直接影响我们后续的工作重点和方向。</p>
         
         <div class="tab-container">
             <div class="tab-buttons">
@@ -186,16 +213,16 @@
                             <td>3月</td>
                             <td class="checkbox-cell">
                                 <div class="rating">
-                                    <input type="radio" id="star1_SOP-01" name="rating_SOP-01" value="1">
-                                    <label for="star1_SOP-01">★</label>
-                                    <input type="radio" id="star2_SOP-01" name="rating_SOP-01" value="2">
-                                    <label for="star2_SOP-01">★</label>
-                                    <input type="radio" id="star3_SOP-01" name="rating_SOP-01" value="3">
-                                    <label for="star3_SOP-01">★</label>
-                                    <input type="radio" id="star4_SOP-01" name="rating_SOP-01" value="4">
-                                    <label for="star4_SOP-01">★</label>
                                     <input type="radio" id="star5_SOP-01" name="rating_SOP-01" value="5">
                                     <label for="star5_SOP-01">★</label>
+                                    <input type="radio" id="star4_SOP-01" name="rating_SOP-01" value="4">
+                                    <label for="star4_SOP-01">★</label>
+                                    <input type="radio" id="star3_SOP-01" name="rating_SOP-01" value="3">
+                                    <label for="star3_SOP-01">★</label>
+                                    <input type="radio" id="star2_SOP-01" name="rating_SOP-01" value="2">
+                                    <label for="star2_SOP-01">★</label>
+                                    <input type="radio" id="star1_SOP-01" name="rating_SOP-01" value="1">
+                                    <label for="star1_SOP-01">★</label>
                                 </div>
                             </td>
                             <td><textarea name="suggestion_SOP-01" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
@@ -207,16 +234,16 @@
                             <td>3月</td>
                             <td class="checkbox-cell">
                                 <div class="rating">
-                                    <input type="radio" id="star1_SOP-01" name="rating_SOP-01" value="1">
-                                    <label for="star1_SOP-01">★</label>
-                                    <input type="radio" id="star2_SOP-01" name="rating_SOP-01" value="2">
-                                    <label for="star2_SOP-01">★</label>
-                                    <input type="radio" id="star3_SOP-01" name="rating_SOP-01" value="3">
-                                    <label for="star3_SOP-01">★</label>
-                                    <input type="radio" id="star4_SOP-01" name="rating_SOP-01" value="4">
-                                    <label for="star4_SOP-01">★</label>
-                                    <input type="radio" id="star5_SOP-01" name="rating_SOP-01" value="5">
-                                    <label for="star5_SOP-01">★</label>
+                                    <input type="radio" id="star5_SOP-05" name="rating_SOP-05" value="5">
+                                    <label for="star5_SOP-05">★</label>
+                                    <input type="radio" id="star4_SOP-05" name="rating_SOP-05" value="4">
+                                    <label for="star4_SOP-05">★</label>
+                                    <input type="radio" id="star3_SOP-05" name="rating_SOP-05" value="3">
+                                    <label for="star3_SOP-05">★</label>
+                                    <input type="radio" id="star2_SOP-05" name="rating_SOP-05" value="2">
+                                    <label for="star2_SOP-05">★</label>
+                                    <input type="radio" id="star1_SOP-05" name="rating_SOP-05" value="1">
+                                    <label for="star1_SOP-05">★</label>
                                 </div>
                             </td>
                             <td><textarea name="suggestion_SOP-05" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
@@ -228,16 +255,16 @@
                             <td>3月</td>
                             <td class="checkbox-cell">
                                 <div class="rating">
-                                    <input type="radio" id="star1_SOP-01" name="rating_SOP-01" value="1">
-                                    <label for="star1_SOP-01">★</label>
-                                    <input type="radio" id="star2_SOP-01" name="rating_SOP-01" value="2">
-                                    <label for="star2_SOP-01">★</label>
-                                    <input type="radio" id="star3_SOP-01" name="rating_SOP-01" value="3">
-                                    <label for="star3_SOP-01">★</label>
-                                    <input type="radio" id="star4_SOP-01" name="rating_SOP-01" value="4">
-                                    <label for="star4_SOP-01">★</label>
-                                    <input type="radio" id="star5_SOP-01" name="rating_SOP-01" value="5">
-                                    <label for="star5_SOP-01">★</label>
+                                    <input type="radio" id="star5_SOP-34" name="rating_SOP-34" value="5">
+                                    <label for="star5_SOP-34">★</label>
+                                    <input type="radio" id="star4_SOP-34" name="rating_SOP-34" value="4">
+                                    <label for="star4_SOP-34">★</label>
+                                    <input type="radio" id="star3_SOP-34" name="rating_SOP-34" value="3">
+                                    <label for="star3_SOP-34">★</label>
+                                    <input type="radio" id="star2_SOP-34" name="rating_SOP-34" value="2">
+                                    <label for="star2_SOP-34">★</label>
+                                    <input type="radio" id="star1_SOP-34" name="rating_SOP-34" value="1">
+                                    <label for="star1_SOP-34">★</label>
                                 </div>
                             </td>
                             <td><textarea name="suggestion_SOP-34" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
@@ -250,16 +277,16 @@
                             <td>3月</td>
                             <td class="checkbox-cell">
                                 <div class="rating">
-                                    <input type="radio" id="star1_SOP-01" name="rating_SOP-01" value="1">
-                                    <label for="star1_SOP-01">★</label>
-                                    <input type="radio" id="star2_SOP-01" name="rating_SOP-01" value="2">
-                                    <label for="star2_SOP-01">★</label>
-                                    <input type="radio" id="star3_SOP-01" name="rating_SOP-01" value="3">
-                                    <label for="star3_SOP-01">★</label>
-                                    <input type="radio" id="star4_SOP-01" name="rating_SOP-01" value="4">
-                                    <label for="star4_SOP-01">★</label>
-                                    <input type="radio" id="star5_SOP-01" name="rating_SOP-01" value="5">
-                                    <label for="star5_SOP-01">★</label>
+                                    <input type="radio" id="star5_SOP-75" name="rating_SOP-75" value="5">
+                                    <label for="star5_SOP-75">★</label>
+                                    <input type="radio" id="star4_SOP-75" name="rating_SOP-75" value="4">
+                                    <label for="star4_SOP-75">★</label>
+                                    <input type="radio" id="star3_SOP-75" name="rating_SOP-75" value="3">
+                                    <label for="star3_SOP-75">★</label>
+                                    <input type="radio" id="star2_SOP-75" name="rating_SOP-75" value="2">
+                                    <label for="star2_SOP-75">★</label>
+                                    <input type="radio" id="star1_SOP-75" name="rating_SOP-75" value="1">
+                                    <label for="star1_SOP-75">★</label>
                                 </div>
                             </td>
                             <td><textarea name="suggestion_SOP-75" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
@@ -404,9 +431,9 @@
                 return 'unknown';
             }
         }
-                                                            
-                                                     
-            
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', async function() {
             // 获取并设置用户IP
             const userIp = await getUserIP();
             document.getElementById('userIp').value = userIp;
@@ -414,9 +441,23 @@
             // 设置提交时间
             const now = new Date();
             document.getElementById('submissionTime').value = now.toISOString();
+            
+            // 设置表单提交格式为Excel
+            document.getElementById('surveyForm').setAttribute('data-format', 'excel');
         });
 
-
+        function openTab(evt, tabName) {
+            // 隐藏所有tab内容
+            var tabContents = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // 移除所有tab按钮的active类
+            var tabButtons = document.getElementsByClassName("tab-button");
+            for (var i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
             
             // 显示当前tab内容并激活按钮
             document.getElementById(tabName).classList.add("active");
@@ -426,25 +467,22 @@
         document.getElementById('surveyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // 验证工号是否填写
+            if (!document.getElementById('employeeId').value) {
+                alert('请填写工号！');
+                return;
+            }
+            
             // 确认用户是否真的要提交
             if (!confirm('确定要提交问卷吗？提交后将无法修改。')) {
                 return;
             }
-            
-                                                                                    // 标记为已提交
-            //                                                                        localStorage.setItem('surveySubmitted', 'true');
-            
-            // 动态修改表单的 action（确保 FormSubmit 能处理）
-            this.action = 'https://formsubmit.co/ren_cola@163.com';
             
             // 提交表单
             this.submit();
             
             // 显示提交成功信息
             alert('感谢您的参与！问卷已提交。');
-            
-                                                                            // 禁用提交按钮
-                         //                                                   document.getElementById('submitBtn').disabled = true;
         });
     </script>
 </body>
