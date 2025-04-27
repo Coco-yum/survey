@@ -14,41 +14,6 @@
             color: #2c3e50;
             text-align: center;
         }
-        .tab-container {
-            margin-top: 30px;
-        }
-        .tab-buttons {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab-button {
-            padding: 10px 20px;
-            background-color: #f2f2f2;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-            transition: all 0.3s;
-        }
-        .tab-button:hover {
-            background-color: #e0e0e0;
-        }
-        .tab-button.active {
-            background-color: #3498db;
-            color: white;
-        }
-        .tab-content {
-            display: none;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
-        }
-        .tab-content.active {
-            display: block;
-        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -110,7 +75,6 @@
             display: flex;
             flex-direction: row-reverse;
             justify-content: center;
-
         }
         .rating input {
             display: none;
@@ -136,6 +100,25 @@
             margin-bottom: 15px;
             border-left: 4px solid #ffeeba;
         }
+        .user-info {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .user-info label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .user-info input {
+
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -144,7 +127,7 @@
     <div class="warning-message">
         <strong>重要提示：</strong>本问卷每个IP地址只能提交一次，请确保完成所有评估后再提交。提交后将无法修改。
     </div>
-    <p>请您根据专业判断，对规划主题进行全面评估。我们特别重视您的宝贵意见，请在满意度评分和补充建议栏中尽可能详细地提供您的看法和建议，包括但不限于：内容改进方向、实际应用场景建议、潜在问题分析等。您的反馈将直接影响我们后续的工作重点和方向。</p>
+    <p>请您根据专业判断，对第一季度规划主题进行全面评估。我们特别重视您的宝贵意见，请在满意度评分和补充建议栏中尽可能详细地提供您的看法和建议，包括但不限于：内容改进方向、实际应用场景建议、潜在问题分析等。您的反馈将直接影响我们后续的工作重点和方向。</p>
     
     <form id="surveyForm" action="https://formsubmit.co/ren_cola@163.com" method="POST">
         <input type="hidden" name="_captcha" value="false">
@@ -154,264 +137,280 @@
         <input type="hidden" name="submission_time" id="submissionTime">
         <input type="text" name="_honey" style="display:none">
         
-        <div class="tab-container">
-            <!-- Only Q1 Section remains -->
-            <div id="q1" class="tab-content active">
-                <div class="section-description">
-                    <p>第一季度已经完成11个主题的编写和培训，请对我们提供的内容进行满意度评估：</p>
-                </div>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th width="7%">编号</th>
-                            <th width="15%">规划主题</th>
-                            <th width="40%">主要内容</th>
-                            <th width="5%">月份</th>
-                            <th width="10%">满意度评分</th>
-                            <th width="23%">改进建议</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>SOP-01</td>
-                            <td>抗菌药品医嘱在临床应用V2.0</td>
-                            <td>门诊、急诊、住院业务流程中，抗菌药品医嘱的应用，按业务分类及对应场景进行整理，包括三级管理、围手术期、联合用药业务下场景模式，及对应配置方案及系统实现效果</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-01" name="rating_SOP-01" value="5">
-                                    <label for="star5_SOP-01">★</label>
-                                    <input type="radio" id="star4_SOP-01" name="rating_SOP-01" value="4">
-                                    <label for="star4_SOP-01">★</label>
-                                    <input type="radio" id="star3_SOP-01" name="rating_SOP-01" value="3">
-                                    <label for="star3_SOP-01">★</label>
-                                    <input type="radio" id="star2_SOP-01" name="rating_SOP-01" value="2">
-                                    <label for="star2_SOP-01">★</label>
-                                    <input type="radio" id="star1_SOP-01" name="rating_SOP-01" value="1">
-                                    <label for="star1_SOP-01">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-01" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-05</td>
-                            <td>双通道药品业务流程</td>
-                            <td>1、双通道药品的政策背景；2、双通道处方流转管理系统的功能介绍；3、基于双通道处方流转系统的三种实现模式：虚拟药房模式、共用现药房模式、独立开方模式；4、三种模式的优劣势与推荐</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-05" name="rating_SOP-05" value="5">
-                                    <label for="star5_SOP-05">★</label>
-                                    <input type="radio" id="star4_SOP-05" name="rating_SOP-05" value="4">
-                                    <label for="star4_SOP-05">★</label>
-                                    <input type="radio" id="star3_SOP-05" name="rating_SOP-05" value="3">
-                                    <label for="star3_SOP-05">★</label>
-                                    <input type="radio" id="star2_SOP-05" name="rating_SOP-05" value="2">
-                                    <label for="star2_SOP-05">★</label>
-                                    <input type="radio" id="star1_SOP-05" name="rating_SOP-05" value="1">
-                                    <label for="star1_SOP-05">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-05" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-34</td>
-                            <td>GCP患者门诊住院业务流程</td>
-                            <td>1、GCP模式分类（采购卫宁GCP、采购三方GCP、无GCP情况）；2、各类模式在5X和60系上的对比以及实现流程和效果；3、相关GCP项目管理和配置</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-34" name="rating_SOP-34" value="5">
-                                    <label for="star5_SOP-34">★</label>
-                                    <input type="radio" id="star4_SOP-34" name="rating_SOP-34" value="4">
-                                    <label for="star4_SOP-34">★</label>
-                                    <input type="radio" id="star3_SOP-34" name="rating_SOP-34" value="3">
-                                    <label for="star3_SOP-34">★</label>
-                                    <input type="radio" id="star2_SOP-34" name="rating_SOP-34" value="2">
-                                    <label for="star2_SOP-34">★</label>
-                                    <input type="radio" id="star1_SOP-34" name="rating_SOP-34" value="1">
-                                    <label for="star1_SOP-34">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-34" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-66</td>
-                            <td>优惠规则应用方案</td>
-                            <td>加强内部和客户对医院减免、记账类需求的理解，方便在业务调研过程中解析其需求，通过案例分析和优惠规则特性快速推荐适用的WiNEX优惠规则。</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-66" name="rating_SOP-66" value="5">
-                                    <label for="star5_SOP-66">★</label>
-                                    <input type="radio" id="star4_SOP-66" name="rating_SOP-66" value="4">
-                                    <label for="star4_SOP-66">★</label>
-                                    <input type="radio" id="star3_SOP-66" name="rating_SOP-66" value="3">
-                                    <label for="star3_SOP-66">★</label>
-                                    <input type="radio" id="star2_SOP-66" name="rating_SOP-66" value="2">
-                                    <label for="star2_SOP-66">★</label>
-                                    <input type="radio" id="star1_SOP-66" name="rating_SOP-66" value="1">
-                                    <label for="star1_SOP-66">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-66" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-06</td>
-                            <td>自理药业务流程应用</td>
-                            <td>1、自理药业务模式介绍；2、自理药业务模式使用场景；3、自理药业务方案比较；4、自理药定义态配置</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-06" name="rating_SOP-06" value="5">
-                                    <label for="star5_SOP-06">★</label>
-                                    <input type="radio" id="star4_SOP-06" name="rating_SOP-06" value="4">
-                                    <label for="star4_SOP-06">★</label>
-                                    <input type="radio" id="star3_SOP-06" name="rating_SOP-06" value="3">
-                                    <label for="star3_SOP-06">★</label>
-                                    <input type="radio" id="star2_SOP-06" name="rating_SOP-06" value="2">
-                                    <label for="star2_SOP-06">★</label>
-                                    <input type="radio" id="star1_SOP-06" name="rating_SOP-06" value="1">
-                                    <label for="star1_SOP-06">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-06" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-07</td>
-                            <td>自备药管理及业务应用</td>
-                            <td>1、自备药应用分类；2、院外自备药应用模式；3、自备药业务方案比较；4、自备药应用实现效果</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-07" name="rating_SOP-07" value="5">
-                                    <label for="star5_SOP-07">★</label>
-                                    <input type="radio" id="star4_SOP-07" name="rating_SOP-07" value="4">
-                                    <label for="star4_SOP-07">★</label>
-                                    <input type="radio" id="star3_SOP-07" name="rating_SOP-07" value="3">
-                                    <label for="star3_SOP-07">★</label>
-                                    <input type="radio" id="star2_SOP-07" name="rating_SOP-07" value="2">
-                                    <label for="star2_SOP-07">★</label>
-                                    <input type="radio" id="star1_SOP-07" name="rating_SOP-07" value="1">
-                                    <label for="star1_SOP-07">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-07" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-10</td>
-                            <td>基数药管理模式</td>
-                            <td>1、基数药的应用背景和场景；2、实现基数药的模式（收费项目模式、常规药品模式、基数药分方模式）3、基数药分方模式在门诊临床科室、住院病区、医技科室、手术室的应用流程；</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-10" name="rating_SOP-10" value="5">
-                                    <label for="star5_SOP-10">★</label>
-                                    <input type="radio" id="star4_SOP-10" name="rating_SOP-10" value="4">
-                                    <label for="star4_SOP-10">★</label>
-                                    <input type="radio" id="star3_SOP-10" name="rating_SOP-10" value="3">
-                                    <label for="star3_SOP-10">★</label>
-                                    <input type="radio" id="star2_SOP-10" name="rating_SOP-10" value="2">
-                                    <label for="star2_SOP-10">★</label>
-                                    <input type="radio" id="star1_SOP-10" name="rating_SOP-10" value="1">
-                                    <label for="star1_SOP-10">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-10" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-18</td>
-                            <td>药品异常情况下临床业务适配应用</td>
-                            <td>基于门诊、住院业务中，根据不同的药品管理模式，药品停用停发停开，药房停用停发停开无库存下业务，及临床业务系统的影响及处理</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-18" name="rating_SOP-18" value="5">
-                                    <label for="star5_SOP-18">★</label>
-                                    <input type="radio" id="star4_SOP-18" name="rating_SOP-18" value="4">
-                                    <label for="star4_SOP-18">★</label>
-                                    <input type="radio" id="star3_SOP-18" name="rating_SOP-18" value="3">
-                                    <label for="star3_SOP-18">★</label>
-                                    <input type="radio" id="star2_SOP-18" name="rating_SOP-18" value="2">
-                                    <label for="star2_SOP-18">★</label>
-                                    <input type="radio" id="star1_SOP-18" name="rating_SOP-18" value="1">
-                                    <label for="star1_SOP-18">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-18" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-19</td>
-                            <td>收费项目增调停后业务适配方案</td>
-                            <td>提供收费项目调整方案，包括新增、调价、停用等，指导字典维护举措和业务系统应用流程，优化开医嘱与计费流程，简化数据维护，减少医患纠纷，降低漏费风险。</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-19" name="rating_SOP-19" value="5">
-                                    <label for="star5_SOP-19">★</label>
-                                    <input type="radio" id="star4_SOP-19" name="rating_SOP-19" value="4">
-                                    <label for="star4_SOP-19">★</label>
-                                    <input type="radio" id="star3_SOP-19" name="rating_SOP-19" value="3">
-                                    <label for="star3_SOP-19">★</label>
-                                    <input type="radio" id="star2_SOP-19" name="rating_SOP-19" value="2">
-                                    <label for="star2_SOP-19">★</label>
-                                    <input type="radio" id="star1_SOP-19" name="rating_SOP-19" value="1">
-                                    <label for="star1_SOP-19">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-19" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-36</td>
-                            <td>日间化疗SOP</td>
-                            <td>1、化疗业务应用模式；2、日间化疗应用模式；3、日间化疗应用方案推荐</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-36" name="rating_SOP-36" value="5">
-                                    <label for="star5_SOP-36">★</label>
-                                    <input type="radio" id="star4_SOP-36" name="rating_SOP-36" value="4">
-                                    <label for="star4_SOP-36">★</label>
-                                    <input type="radio" id="star3_SOP-36" name="rating_SOP-36" value="3">
-                                    <label for="star3_SOP-36">★</label>
-                                    <input type="radio" id="star2_SOP-36" name="rating_SOP-36" value="2">
-                                    <label for="star2_SOP-36">★</label>
-                                    <input type="radio" id="star1_SOP-36" name="rating_SOP-36" value="1">
-                                    <label for="star1_SOP-36">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-36" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>SOP-75</td>
-                            <td>过敏与皮试业务流程V2.0</td>
-                            <td>补充V1版本内容，1、皮试模式分类（①线下皮试模式；②先皮试后治疗；③皮试联动治疗；④皮试作为治疗项目）；2、各模式分类的对比及实现效果</td>
-                            <td>3月</td>
-                            <td class="checkbox-cell">
-                                <div class="rating">
-                                    <input type="radio" id="star5_SOP-75" name="rating_SOP-75" value="5">
-                                    <label for="star5_SOP-75">★</label>
-                                    <input type="radio" id="star4_SOP-75" name="rating_SOP-75" value="4">
-                                    <label for="star4_SOP-75">★</label>
-                                    <input type="radio" id="star3_SOP-75" name="rating_SOP-75" value="3">
-                                    <label for="star3_SOP-75">★</label>
-                                    <input type="radio" id="star2_SOP-75" name="rating_SOP-75" value="2">
-                                    <label for="star2_SOP-75">★</label>
-                                    <input type="radio" id="star1_SOP-75" name="rating_SOP-75" value="1">
-                                    <label for="star1_SOP-75">★</label>
-                                </div>
-                            </td>
-                            <td><textarea name="suggestion_SOP-75" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <!-- Submit button moved to Q1 -->
-                <button type="submit" class="submit-btn" id="submitBtn">提交问卷</button>
-                <div class="warning-message">
-                    <strong>请确认：</strong>您已完成所有评估吗？提交后将无法修改。每个IP地址只能提交一次。
-                </div>
+        <!-- 用户信息部分 -->
+
+
+
+<div class="user-info" style="display: flex; align-items: center; gap: 30px;">
+    <label for="employeeId">工号:</label>
+    <input type="text" id="employeeId" name="employeeId" >
+    
+    <label for="userName">姓名:</label>
+    <input type="text" id="userName" name="userName" >
+    
+    <label for="contactInfo">联系方式:</label>
+    <input type="text" id="contactInfo" name="contactInfo" >
+</div>
+
+
+ 
+        
+        <!-- Q1 Section -->
+        <div id="q1">
+            <div class="section-description">
+                <p>第一季度已经完成11个主题的编写和培训，请对我们提供的内容进行满意度评估：</p>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th width="7%">编号</th>
+                        <th width="15%">规划主题</th>
+                        <th width="40%">主要内容</th>
+                        <th width="5%">月份</th>
+                        <th width="10%">满意度评分</th>
+                        <th width="23%">改进建议</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SOP-01</td>
+                        <td>抗菌药品医嘱在临床应用V2.0</td>
+                        <td>门诊、急诊、住院业务流程中，抗菌药品医嘱的应用，按业务分类及对应场景进行整理，包括三级管理、围手术期、联合用药业务下场景模式，及对应配置方案及系统实现效果</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-01" name="rating_SOP-01" value="5">
+                                <label for="star5_SOP-01">★</label>
+                                <input type="radio" id="star4_SOP-01" name="rating_SOP-01" value="4">
+                                <label for="star4_SOP-01">★</label>
+                                <input type="radio" id="star3_SOP-01" name="rating_SOP-01" value="3">
+                                <label for="star3_SOP-01">★</label>
+                                <input type="radio" id="star2_SOP-01" name="rating_SOP-01" value="2">
+                                <label for="star2_SOP-01">★</label>
+                                <input type="radio" id="star1_SOP-01" name="rating_SOP-01" value="1">
+                                <label for="star1_SOP-01">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-01" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-05</td>
+                        <td>双通道药品业务流程</td>
+                        <td>1、双通道药品的政策背景；2、双通道处方流转管理系统的功能介绍；3、基于双通道处方流转系统的三种实现模式：虚拟药房模式、共用现药房模式、独立开方模式；4、三种模式的优劣势与推荐</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-05" name="rating_SOP-05" value="5">
+                                <label for="star5_SOP-05">★</label>
+                                <input type="radio" id="star4_SOP-05" name="rating_SOP-05" value="4">
+                                <label for="star4_SOP-05">★</label>
+                                <input type="radio" id="star3_SOP-05" name="rating_SOP-05" value="3">
+                                <label for="star3_SOP-05">★</label>
+                                <input type="radio" id="star2_SOP-05" name="rating_SOP-05" value="2">
+                                <label for="star2_SOP-05">★</label>
+                                <input type="radio" id="star1_SOP-05" name="rating_SOP-05" value="1">
+                                <label for="star1_SOP-05">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-05" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-34</td>
+                        <td>GCP患者门诊住院业务流程</td>
+                        <td>1、GCP模式分类（采购卫宁GCP、采购三方GCP、无GCP情况）；2、各类模式在5X和60系上的对比以及实现流程和效果；3、相关GCP项目管理和配置</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-34" name="rating_SOP-34" value="5">
+                                <label for="star5_SOP-34">★</label>
+                                <input type="radio" id="star4_SOP-34" name="rating_SOP-34" value="4">
+                                <label for="star4_SOP-34">★</label>
+                                <input type="radio" id="star3_SOP-34" name="rating_SOP-34" value="3">
+                                <label for="star3_SOP-34">★</label>
+                                <input type="radio" id="star2_SOP-34" name="rating_SOP-34" value="2">
+                                <label for="star2_SOP-34">★</label>
+                                <input type="radio" id="star1_SOP-34" name="rating_SOP-34" value="1">
+                                <label for="star1_SOP-34">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-34" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-66</td>
+                        <td>优惠规则应用方案</td>
+                        <td>加强内部和客户对医院减免、记账类需求的理解，方便在业务调研过程中解析其需求，通过案例分析和优惠规则特性快速推荐适用的WiNEX优惠规则。</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-66" name="rating_SOP-66" value="5">
+                                <label for="star5_SOP-66">★</label>
+                                <input type="radio" id="star4_SOP-66" name="rating_SOP-66" value="4">
+                                <label for="star4_SOP-66">★</label>
+                                <input type="radio" id="star3_SOP-66" name="rating_SOP-66" value="3">
+                                <label for="star3_SOP-66">★</label>
+                                <input type="radio" id="star2_SOP-66" name="rating_SOP-66" value="2">
+                                <label for="star2_SOP-66">★</label>
+                                <input type="radio" id="star1_SOP-66" name="rating_SOP-66" value="1">
+                                <label for="star1_SOP-66">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-66" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-06</td>
+                        <td>自理药业务流程应用</td>
+                        <td>1、自理药业务模式介绍；2、自理药业务模式使用场景；3、自理药业务方案比较；4、自理药定义态配置</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-06" name="rating_SOP-06" value="5">
+                                <label for="star5_SOP-06">★</label>
+                                <input type="radio" id="star4_SOP-06" name="rating_SOP-06" value="4">
+                                <label for="star4_SOP-06">★</label>
+                                <input type="radio" id="star3_SOP-06" name="rating_SOP-06" value="3">
+                                <label for="star3_SOP-06">★</label>
+                                <input type="radio" id="star2_SOP-06" name="rating_SOP-06" value="2">
+                                <label for="star2_SOP-06">★</label>
+                                <input type="radio" id="star1_SOP-06" name="rating_SOP-06" value="1">
+                                <label for="star1_SOP-06">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-06" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-07</td>
+                        <td>自备药管理及业务应用</td>
+                        <td>1、自备药应用分类；2、院外自备药应用模式；3、自备药业务方案比较；4、自备药应用实现效果</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-07" name="rating_SOP-07" value="5">
+                                <label for="star5_SOP-07">★</label>
+                                <input type="radio" id="star4_SOP-07" name="rating_SOP-07" value="4">
+                                <label for="star4_SOP-07">★</label>
+                                <input type="radio" id="star3_SOP-07" name="rating_SOP-07" value="3">
+                                <label for="star3_SOP-07">★</label>
+                                <input type="radio" id="star2_SOP-07" name="rating_SOP-07" value="2">
+                                <label for="star2_SOP-07">★</label>
+                                <input type="radio" id="star1_SOP-07" name="rating_SOP-07" value="1">
+                                <label for="star1_SOP-07">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-07" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-10</td>
+                        <td>基数药管理模式</td>
+                        <td>1、基数药的应用背景和场景；2、实现基数药的模式（收费项目模式、常规药品模式、基数药分方模式）3、基数药分方模式在门诊临床科室、住院病区、医技科室、手术室的应用流程；</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-10" name="rating_SOP-10" value="5">
+                                <label for="star5_SOP-10">★</label>
+                                <input type="radio" id="star4_SOP-10" name="rating_SOP-10" value="4">
+                                <label for="star4_SOP-10">★</label>
+                                <input type="radio" id="star3_SOP-10" name="rating_SOP-10" value="3">
+                                <label for="star3_SOP-10">★</label>
+                                <input type="radio" id="star2_SOP-10" name="rating_SOP-10" value="2">
+                                <label for="star2_SOP-10">★</label>
+                                <input type="radio" id="star1_SOP-10" name="rating_SOP-10" value="1">
+                                <label for="star1_SOP-10">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-10" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-18</td>
+                        <td>药品异常情况下临床业务适配应用</td>
+                        <td>基于门诊、住院业务中，根据不同的药品管理模式，药品停用停发停开，药房停用停发停开无库存下业务，及临床业务系统的影响及处理</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-18" name="rating_SOP-18" value="5">
+                                <label for="star5_SOP-18">★</label>
+                                <input type="radio" id="star4_SOP-18" name="rating_SOP-18" value="4">
+                                <label for="star4_SOP-18">★</label>
+                                <input type="radio" id="star3_SOP-18" name="rating_SOP-18" value="3">
+                                <label for="star3_SOP-18">★</label>
+                                <input type="radio" id="star2_SOP-18" name="rating_SOP-18" value="2">
+                                <label for="star2_SOP-18">★</label>
+                                <input type="radio" id="star1_SOP-18" name="rating_SOP-18" value="1">
+                                <label for="star1_SOP-18">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-18" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-19</td>
+                        <td>收费项目增调停后业务适配方案</td>
+                        <td>提供收费项目调整方案，包括新增、调价、停用等，指导字典维护举措和业务系统应用流程，优化开医嘱与计费流程，简化数据维护，减少医患纠纷，降低漏费风险。</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-19" name="rating_SOP-19" value="5">
+                                <label for="star5_SOP-19">★</label>
+                                <input type="radio" id="star4_SOP-19" name="rating_SOP-19" value="4">
+                                <label for="star4_SOP-19">★</label>
+                                <input type="radio" id="star3_SOP-19" name="rating_SOP-19" value="3">
+                                <label for="star3_SOP-19">★</label>
+                                <input type="radio" id="star2_SOP-19" name="rating_SOP-19" value="2">
+                                <label for="star2_SOP-19">★</label>
+                                <input type="radio" id="star1_SOP-19" name="rating_SOP-19" value="1">
+                                <label for="star1_SOP-19">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-19" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-36</td>
+                        <td>日间化疗SOP</td>
+                        <td>1、化疗业务应用模式；2、日间化疗应用模式；3、日间化疗应用方案推荐</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-36" name="rating_SOP-36" value="5">
+                                <label for="star5_SOP-36">★</label>
+                                <input type="radio" id="star4_SOP-36" name="rating_SOP-36" value="4">
+                                <label for="star4_SOP-36">★</label>
+                                <input type="radio" id="star3_SOP-36" name="rating_SOP-36" value="3">
+                                <label for="star3_SOP-36">★</label>
+                                <input type="radio" id="star2_SOP-36" name="rating_SOP-36" value="2">
+                                <label for="star2_SOP-36">★</label>
+                                <input type="radio" id="star1_SOP-36" name="rating_SOP-36" value="1">
+                                <label for="star1_SOP-36">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-36" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>SOP-75</td>
+                        <td>过敏与皮试业务流程V2.0</td>
+                        <td>补充V1版本内容，1、皮试模式分类（①线下皮试模式；②先皮试后治疗；③皮试联动治疗；④皮试作为治疗项目）；2、各模式分类的对比及实现效果</td>
+                        <td>3月</td>
+                        <td class="checkbox-cell">
+                            <div class="rating">
+                                <input type="radio" id="star5_SOP-75" name="rating_SOP-75" value="5">
+                                <label for="star5_SOP-75">★</label>
+                                <input type="radio" id="star4_SOP-75" name="rating_SOP-75" value="4">
+                                <label for="star4_SOP-75">★</label>
+                                <input type="radio" id="star3_SOP-75" name="rating_SOP-75" value="3">
+                                <label for="star3_SOP-75">★</label>
+                                <input type="radio" id="star2_SOP-75" name="rating_SOP-75" value="2">
+                                <label for="star2_SOP-75">★</label>
+                                <input type="radio" id="star1_SOP-75" name="rating_SOP-75" value="1">
+                                <label for="star1_SOP-75">★</label>
+                            </div>
+                        </td>
+                        <td><textarea name="suggestion_SOP-75" placeholder="请详细说明改进建议，如内容准确性、实用性、应用场景等方面"></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- 提交按钮 -->
+            <button type="submit" class="submit-btn" id="submitBtn">提交问卷</button>
+            <div class="warning-message">
+                <strong>请确认：</strong>您已完成所有评估吗？提交后将无法修改。每个IP地址只能提交一次。
             </div>
         </div>
     </form>
