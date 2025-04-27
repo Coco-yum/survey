@@ -184,6 +184,22 @@
             justify-content: center;
             gap: 10px;
         }
+        .email-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .email-form-group {
+            margin-bottom: 15px;
+        }
+        .email-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -396,7 +412,11 @@
         <ul id="not-remembered-words"></ul>
     </div>
 
-    <form class="email-form" id="email-form" action="https://formsubmit.co/ren_cola@163.com" method="POST">
+    <form class="email-form" id="email-form">
+        <div class="email-form-group">
+            <label for="user-email">请输入您的邮箱地址：</label>
+            <input type="email" id="user-email" class="email-input" required placeholder="example@163.com">
+        </div>
         <input type="hidden" name="_subject" value="未记住的单词清单">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="未记住的单词" id="email-words">
@@ -632,8 +652,24 @@
                     { "chinese": "最喜欢的", "english": "favourite" },
                     { "chinese": "美味的", "english": "yummy" }
                 ], 
-                phrases: [], 
-                sentences: []
+                phrases: [
+                    {chinese: "示例词组1", english: "example phrase 1"}
+                ],
+                sentences: [
+                    {chinese: "示例句子1", english: "example sentence 1"}
+                ]
+            },
+            m2u3: {
+                words: [
+                    {chinese: "示例单词1", english: "example word 1"},
+                    {chinese: "示例单词2", english: "example word 2"}
+                ],
+                phrases: [
+                    {chinese: "示例词组1", english: "example phrase 1"}
+                ],
+                sentences: [
+                    {chinese: "示例句子1", english: "example sentence 1"}
+                ]
             },
             m3u1: {
                 words: [
@@ -1024,6 +1060,48 @@
             }[type];
         }
 
+        // 修改邮件表单提交处理
+        document.getElementById('email-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userEmail = document.getElementById('user-email').value;
+            if (!userEmail || !userEmail.includes('@')) {
+                alert('请输入有效的邮箱地址！');
+                return;
+            }
+            
+            const formData = new FormData(this);
+            const wordsData = document.getElementById('email-words').value;
+            
+            // 使用FormSubmit.co发送邮件
+            fetch('https://formsubmit.co/ajax/' + encodeURIComponent(userEmail), {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: '未记住的单词清单',
+                    _template: 'table',
+                    '未记住的单词': wordsData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success === "true") {
+                    alert('邮件发送成功！');
+                    this.reset();
+                    document.getElementById('not-remembered-list').style.display = 'none';
+                    this.style.display = 'none';
+                } else {
+                    alert('邮件发送失败，请稍后再试。');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('邮件发送失败，请检查网络连接。');
+            });
+        });
         // 事件监听
         document.querySelectorAll('.module-btn').forEach(btn => {
             if (btn.id !== 'reset-all' && btn.id !== 'finish-session') {
