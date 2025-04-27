@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人资料库</title>
+    <!-- 引入Markdown解析库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -64,43 +66,62 @@
             background-color: #2980b9;
         }
         
-        .knowledge-container {
+        .doc-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: 250px 1fr;
             gap: 20px;
         }
         
-        .knowledge-card {
+        .sidebar {
             background-color: white;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 15px;
+            height: fit-content;
         }
         
-        .knowledge-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .doc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
         
-        .knowledge-card h3 {
-            margin-top: 0;
-            color: #2c3e50;
+        .doc-item {
+            padding: 8px 0;
             border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            cursor: pointer;
         }
         
-        .knowledge-card .date {
-            font-size: 0.8em;
+        .doc-item:hover {
+            color: #3498db;
+        }
+        
+        .doc-content {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .doc-content img {
+            max-width: 100%;
+        }
+        
+        .doc-meta {
+            display: flex;
+            justify-content: space-between;
             color: #7f8c8d;
-            margin-bottom: 10px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
         }
         
-        .knowledge-card .tags {
+        .doc-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         .tag {
@@ -120,130 +141,264 @@
         }
         
         @media (max-width: 768px) {
-            .knowledge-container {
+            .doc-container {
                 grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>子亮的个人知识库</h1>
-        <p class="subtitle">记录、整理与沉淀个人知识与经验</p>
+        <h1>个人资料库</h1>
+        <p class="subtitle">Markdown 格式的个人知识管理与文档存储</p>
     </header>
     
     <div class="search-container">
-        <input type="text" id="search" placeholder="搜索知识条目...">
+        <input type="text" id="search" placeholder="搜索文档...">
     </div>
     
     <div class="categories">
-        <div class="category">全部</div>
-        <div class="category">技术笔记</div>
-        <div class="category">读书心得</div>
-        <div class="category">生活经验</div>
-        <div class="category">工作备忘</div>
-        <div class="category">兴趣爱好</div>
+        <div class="category active">全部文档</div>
+        <div class="category">技术文档</div>
+        <div class="category">学习笔记</div>
+        <div class="category">生活记录</div>
+        <div class="category">工作资料</div>
     </div>
     
-    <div class="knowledge-container">
-        <div class="knowledge-card">
-            <h3>如何高效学习编程</h3>
-            <div class="date">2023-05-15</div>
-            <p>总结了个人学习编程的有效方法，包括刻意练习、项目驱动学习和知识体系构建等...</p>
-            <div class="tags">
-                <span class="tag">编程</span>
-                <span class="tag">学习方法</span>
-                <span class="tag">技术</span>
-            </div>
+    <div class="doc-container">
+        <div class="sidebar">
+            <h3>文档列表</h3>
+            <ul class="doc-list" id="docList">
+                <li class="doc-item" data-file="tech-guide.md">技术指南</li>
+                <li class="doc-item" data-file="learning-notes.md">学习笔记</li>
+                <li class="doc-item" data-file="travel-log.md">旅行日志</li>
+                <li class="doc-item" data-file="work-process.md">工作流程</li>
+                <li class="doc-item" data-file="book-summary.md">读书摘要</li>
+            </ul>
         </div>
         
-        <div class="knowledge-card">
-            <h3>《原子习惯》读书笔记</h3>
-            <div class="date">2023-04-22</div>
-            <p>记录书中关于习惯养成的核心观点和个人实践心得，特别是1%进步法则...</p>
-            <div class="tags">
-                <span class="tag">读书</span>
-                <span class="tag">自我提升</span>
-                <span class="tag">心理学</span>
+        <div class="doc-content" id="docContent">
+            <div class="doc-meta">
+                <span id="docTitle">欢迎使用个人资料库</span>
+                <span id="docDate"></span>
             </div>
-        </div>
-        
-        <div class="knowledge-card">
-            <h3>家庭网络优化方案</h3>
-            <div class="date">2023-03-10</div>
-            <p>研究并实施的家庭网络优化方案，包括路由器选择、Mesh组网和QoS设置等...</p>
-            <div class="tags">
-                <span class="tag">网络</span>
-                <span class="tag">技术</span>
-                <span class="tag">生活</span>
-            </div>
-        </div>
-        
-        <div class="knowledge-card">
-            <h3>Python数据处理技巧</h3>
-            <div class="date">2023-02-28</div>
-            <p>整理工作中常用的Python数据处理技巧，包括Pandas高级用法和性能优化...</p>
-            <div class="tags">
-                <span class="tag">Python</span>
-                <span class="tag">数据处理</span>
-                <span class="tag">工作</span>
-            </div>
-        </div>
-        
-        <div class="knowledge-card">
-            <h3>个人财务管理方法</h3>
-            <div class="date">2023-01-15</div>
-            <p>实践验证有效的个人财务管理体系，包括预算制定、投资分配和消费记录等...</p>
-            <div class="tags">
-                <span class="tag">财务</span>
-                <span class="tag">生活</span>
-                <span class="tag">管理</span>
-            </div>
-        </div>
-        
-        <div class="knowledge-card">
-            <h3>摄影基础知识备忘</h3>
-            <div class="date">2022-12-05</div>
-            <p>学习摄影过程中记录的基础知识要点，包括曝光三角、构图法则和后期技巧...</p>
-            <div class="tags">
-                <span class="tag">摄影</span>
-                <span class="tag">爱好</span>
-                <span class="tag">艺术</span>
+            <div id="markdownContent">
+                <h2>个人资料库使用说明</h2>
+                
+                <p>这是一个基于 Markdown 的个人资料管理系统，适合存储和管理各种个人文档。</p>
+                
+                <h3>主要功能</h3>
+                <ul>
+                    <li>支持 Markdown 格式文档展示</li>
+                    <li>文档分类管理</li>
+                    <li>全文搜索功能</li>
+                    <li>响应式设计，适配各种设备</li>
+                </ul>
+                
+                <h3>如何使用</h3>
+                <ol>
+                    <li>在左侧选择要查看的文档</li>
+                    <li>文档内容将以 Markdown 格式渲染显示</li>
+                    <li>使用顶部搜索框可以快速查找文档</li>
+                    <li>点击分类标签可以筛选文档</li>
+                </ol>
+                
+                <h3>Markdown 文档规范</h3>
+                <p>建议按照以下格式创建您的 Markdown 文档：</p>
+                
+                ```markdown
+                # 文档标题
+                
+                > 创建时间: 2023-06-01 | 最后更新: 2023-06-15
+                
+                ## 概述
+                文档的简要说明...
+                
+                ## 详细内容
+                - 列表项1
+                - 列表项2
+                
+                ```代码示例```
+                
+                ## 参考资料
+                1. [相关链接](https://example.com)
+                ```
+                
+                <div class="doc-tags">
+                    <span class="tag">帮助</span>
+                    <span class="tag">文档</span>
+                    <span class="tag">指南</span>
+                </div>
             </div>
         </div>
     </div>
     
     <footer>
-        <p>© 2023 个人资料库 | 最后更新: <span id="last-update">2023-06-01</span></p>
+        <p>© 2023 个人资料库 | 使用 Markdown 格式存储 | 最后更新: <span id="last-update">2023-06-01</span></p>
     </footer>
     
     <script>
-        // 简单的搜索功能
-        document.getElementById('search').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.knowledge-card');
+        // 文档数据 - 实际使用中可以替换为从服务器加载
+        const documents = {
+            "tech-guide.md": `# 技术指南文档示例
+
+> 创建时间: 2023-05-10 | 最后更新: 2023-05-20
+
+## 常用命令备忘
+
+\`\`\`bash
+# 查看系统信息
+uname -a
+
+# 查看磁盘空间
+df -h
+
+# 查找文件
+find /path -name "*.md"
+\`\`\`
+
+## 开发工具配置
+
+1. **VS Code 设置**
+   - 推荐插件:
+     - Markdown All in One
+     - Prettier
+     - ESLint
+
+2. **Git 配置**
+   - 常用别名:
+   \`\`\`gitconfig
+   [alias]
+       co = checkout
+       br = branch
+       ci = commit
+   \`\`\`
+
+<div class="doc-tags">
+    <span class="tag">技术</span>
+    <span class="tag">备忘</span>
+    <span class="tag">开发</span>
+</div>`,
             
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if(text.includes(searchTerm)) {
-                    card.style.display = 'block';
+            "learning-notes.md": `# 学习笔记示例
+
+> 创建时间: 2023-04-15 | 最后更新: 2023-04-25
+
+## 机器学习要点
+
+### 监督学习
+- 线性回归
+- 逻辑回归
+- 支持向量机
+
+### 无监督学习
+- K-means聚类
+- 主成分分析(PCA)
+
+## 数学公式示例
+
+行内公式: $E=mc^2$
+
+块级公式:
+
+$$
+\\nabla \\cdot \\mathbf{D} = \\rho
+$$
+
+<div class="doc-tags">
+    <span class="tag">学习</span>
+    <span class="tag">笔记</span>
+    <span class="tag">AI</span>
+</div>`
+        };
+
+        // 初始化Markdown渲染
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
+        // 文档点击事件
+        document.querySelectorAll('.doc-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const fileName = this.getAttribute('data-file');
+                loadDocument(fileName);
+                
+                // 更新活动状态
+                document.querySelectorAll('.doc-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 加载文档函数
+        function loadDocument(fileName) {
+            const contentDiv = document.getElementById('markdownContent');
+            const titleSpan = document.getElementById('docTitle');
+            const dateSpan = document.getElementById('docDate');
+            
+            if (documents[fileName]) {
+                // 从内存中加载文档
+                contentDiv.innerHTML = marked.parse(documents[fileName]);
+                
+                // 提取标题和日期
+                const titleMatch = documents[fileName].match(/^# (.+)/m);
+                const dateMatch = documents[fileName].match(/最后更新: (.+)/);
+                
+                titleSpan.textContent = titleMatch ? titleMatch[1] : fileName;
+                dateSpan.textContent = dateMatch ? dateMatch[1] : '';
+            } else {
+                // 实际使用中可以替换为从服务器加载Markdown文件
+                fetch(fileName)
+                    .then(response => response.text())
+                    .then(text => {
+                        contentDiv.innerHTML = marked.parse(text);
+                        
+                        // 提取标题和日期
+                        const titleMatch = text.match(/^# (.+)/m);
+                        const dateMatch = text.match(/最后更新: (.+)/);
+                        
+                        titleSpan.textContent = titleMatch ? titleMatch[1] : fileName;
+                        dateSpan.textContent = dateMatch ? dateMatch[1] : '';
+                    })
+                    .catch(err => {
+                        contentDiv.innerHTML = `<p>无法加载文档: ${fileName}</p><p>${err.message}</p>`;
+                        titleSpan.textContent = "加载错误";
+                        dateSpan.textContent = "";
+                    });
+            }
+        }
+
+        // 搜索功能
+        document.getElementById('search').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.doc-item');
+            
+            items.forEach(item => {
+                if (item.textContent.toLowerCase().includes(term)) {
+                    item.style.display = 'block';
                 } else {
-                    card.style.display = 'none';
+                    item.style.display = 'none';
                 }
             });
         });
-        
-        // 分类筛选功能
-        const categories = document.querySelectorAll('.category');
-        categories.forEach(category => {
-            category.addEventListener('click', function() {
-                const categoryName = this.textContent;
+
+        // 分类筛选
+        document.querySelectorAll('.category').forEach(cat => {
+            cat.addEventListener('click', function() {
+                document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
                 // 这里可以添加实际的分类筛选逻辑
-                alert('筛选分类: ' + categoryName);
+                const category = this.textContent;
+                console.log(`筛选分类: ${category}`);
             });
         });
-        
-        // 自动更新最后修改日期
+
+        // 更新最后修改日期
         document.getElementById('last-update').textContent = new Date().toISOString().split('T')[0];
     </script>
 </body>
