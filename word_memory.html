@@ -11,6 +11,9 @@
             margin: 0 auto;
             padding: 20px;
             background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         h1 {
             color: #2c3e50;
@@ -29,6 +32,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             padding: 30px;
             margin-bottom: 20px;
+            flex-grow: 1;
         }
         .chinese {
             font-size: 32px;
@@ -38,7 +42,7 @@
             text-align: center;
         }
         .answer {
-            display: none;
+            min-height: 60px;
             font-size: 28px;
             color: #27ae60;
             margin: 25px 0;
@@ -46,6 +50,9 @@
             background-color: #e8f5e9;
             border-radius: 5px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .buttons {
             display: flex;
@@ -171,6 +178,12 @@
         .word-type-btn.active {
             background-color: #2c3e50;
         }
+        .footer-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -189,8 +202,6 @@
         <button class="module-btn" data-module="m4u1">M4U1</button>
         <button class="module-btn" data-module="m4u2">M4U2</button>
         <button class="module-btn" data-module="m4u3">M4U3</button>
-        <button class="reset-btn" id="reset-all">重置所有进度</button>
-        <button class="finish-btn" id="finish-session">结束本次打卡</button>
     </div>
     
     <div class="word-type-tabs">
@@ -215,7 +226,6 @@
         </div>
     </div>
     
-    <!-- Other module containers (hidden by default) -->
     <div id="m1u2-words" class="word-container hidden">
         <div class="progress">进度: <span id="m1u2-progress">0</span>/<span id="m1u2-total">0</span> (<span id="m1u2-completed">0</span> 已记住)</div>
         <div id="m1u2-card" class="card">
@@ -231,8 +241,155 @@
         </div>
     </div>
     
-    <!-- Add containers for all other modules (m1u3, m2u1, etc.) following the same pattern -->
-    <!-- For brevity, I'm showing just a few, but in a real implementation you'd include all -->
+    <div id="m1u3-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m1u3-progress">0</span>/<span id="m1u3-total">0</span> (<span id="m1u3-completed">0</span> 已记住)</div>
+        <div id="m1u3-card" class="card">
+            <div class="chinese" id="m1u3-chinese"></div>
+            <div class="answer" id="m1u3-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m1u3-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m1u3-remembered">已记住</button>
+                    <button class="not-remembered" id="m1u3-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m2u1-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m2u1-progress">0</span>/<span id="m2u1-total">0</span> (<span id="m2u1-completed">0</span> 已记住)</div>
+        <div id="m2u1-card" class="card">
+            <div class="chinese" id="m2u1-chinese"></div>
+            <div class="answer" id="m2u1-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m2u1-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m2u1-remembered">已记住</button>
+                    <button class="not-remembered" id="m2u1-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m2u2-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m2u2-progress">0</span>/<span id="m2u2-total">0</span> (<span id="m2u2-completed">0</span> 已记住)</div>
+        <div id="m2u2-card" class="card">
+            <div class="chinese" id="m2u2-chinese"></div>
+            <div class="answer" id="m2u2-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m2u2-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m2u2-remembered">已记住</button>
+                    <button class="not-remembered" id="m2u2-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m2u3-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m2u3-progress">0</span>/<span id="m2u3-total">0</span> (<span id="m2u3-completed">0</span> 已记住)</div>
+        <div id="m2u3-card" class="card">
+            <div class="chinese" id="m2u3-chinese"></div>
+            <div class="answer" id="m2u3-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m2u3-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m2u3-remembered">已记住</button>
+                    <button class="not-remembered" id="m2u3-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m3u1-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m3u1-progress">0</span>/<span id="m3u1-total">0</span> (<span id="m3u1-completed">0</span> 已记住)</div>
+        <div id="m3u1-card" class="card">
+            <div class="chinese" id="m3u1-chinese"></div>
+            <div class="answer" id="m3u1-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m3u1-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m3u1-remembered">已记住</button>
+                    <button class="not-remembered" id="m3u1-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m3u2-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m3u2-progress">0</span>/<span id="m3u2-total">0</span> (<span id="m3u2-completed">0</span> 已记住)</div>
+        <div id="m3u2-card" class="card">
+            <div class="chinese" id="m3u2-chinese"></div>
+            <div class="answer" id="m3u2-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m3u2-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m3u2-remembered">已记住</button>
+                    <button class="not-remembered" id="m3u2-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m3u3-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m3u3-progress">0</span>/<span id="m3u3-total">0</span> (<span id="m3u3-completed">0</span> 已记住)</div>
+        <div id="m3u3-card" class="card">
+            <div class="chinese" id="m3u3-chinese"></div>
+            <div class="answer" id="m3u3-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m3u3-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m3u3-remembered">已记住</button>
+                    <button class="not-remembered" id="m3u3-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m4u1-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m4u1-progress">0</span>/<span id="m4u1-total">0</span> (<span id="m4u1-completed">0</span> 已记住)</div>
+        <div id="m4u1-card" class="card">
+            <div class="chinese" id="m4u1-chinese"></div>
+            <div class="answer" id="m4u1-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m4u1-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m4u1-remembered">已记住</button>
+                    <button class="not-remembered" id="m4u1-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m4u2-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m4u2-progress">0</span>/<span id="m4u2-total">0</span> (<span id="m4u2-completed">0</span> 已记住)</div>
+        <div id="m4u2-card" class="card">
+            <div class="chinese" id="m4u2-chinese"></div>
+            <div class="answer" id="m4u2-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m4u2-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m4u2-remembered">已记住</button>
+                    <button class="not-remembered" id="m4u2-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m4u3-words" class="word-container hidden">
+        <div class="progress">进度: <span id="m4u3-progress">0</span>/<span id="m4u3-total">0</span> (<span id="m4u3-completed">0</span> 已记住)</div>
+        <div id="m4u3-card" class="card">
+            <div class="chinese" id="m4u3-chinese"></div>
+            <div class="answer" id="m4u3-answer"></div>
+            <div class="buttons">
+                <button class="show-answer" id="m4u3-show-answer">显示答案</button>
+                <div class="action-buttons">
+                    <button class="remembered" id="m4u3-remembered">已记住</button>
+                    <button class="not-remembered" id="m4u3-not-remembered">未记住</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div id="not-remembered-list" class="not-remembered-list">
         <h3>未记住的单词清单</h3>
@@ -245,6 +402,11 @@
         <input type="hidden" name="未记住的单词" id="email-words">
         <button type="submit" class="finish-btn">发送到邮箱</button>
     </form>
+
+    <div class="footer-buttons">
+        <button class="reset-btn" id="reset-all">重置所有进度</button>
+        <button class="finish-btn" id="finish-session">结束本次打卡</button>
+    </div>
 
     <script>
         // 单词数据 - 示例结构
@@ -411,8 +573,8 @@
                     {chinese: "小鸟喜欢飞。", english: "Birds like to fly."}
                 ]
             },
-            // Add data for other modules following the same pattern
-            m2u2: {words: [
+            m2u2: {
+                words: [
                     { "chinese": "食物", "english": "food" },
                     { "chinese": "汉堡", "english": "hamburger" },
                     { "chinese": "披萨", "english": "pizza" },
@@ -469,57 +631,111 @@
                     { "chinese": "自行车", "english": "bike" },
                     { "chinese": "最喜欢的", "english": "favourite" },
                     { "chinese": "美味的", "english": "yummy" }
-            ], 
-                   phrases: [], 
-                   sentences: []
-                  },
-            m3u1: {words: [
-        		{chinese: "季节", english: "season"}，
-                    {chinese: "春天", english: "spring"}，
-                    {chinese: "夏天", english: "summer"}，
-                    {chinese: "秋天", english: "autumn"}，
-                    {chinese: "冬天", english: "winter"}，
-                    {chinese: "天气", english: "weather"}，
-                    {chinese: "晴朗的", english: "sunny"}，
-                    {chinese: "太阳", english: "sun"}，
-                    {chinese: "多云的", english: "cloudy"}，
-                    {chinese: "云", english: "cloud"}，
-                    {chinese: "有雨的", english: "rainy"}，
-                    {chinese: "雨", english: "rain"}，
-                    {chinese: "有风的", english: "windy"}，
-                    {chinese: "风", english: "wind"}，
-                    {chinese: "温暖的", english: "warm"}，
-                    {chinese: "炎热的", english: "hot"}，
-                    {chinese: "凉爽的", english: "cool"}，
-                    {chinese: "寒冷的", english: "cold"}，
-                    {chinese: "在外面", english: "outside"}，
-                    {chinese: "雪人（单数）", english: "snowman"}，
+                ], 
+                phrases: [], 
+                sentences: []
+            },
+            m3u1: {
+                words: [
+                    {chinese: "季节", english: "season"},
+                    {chinese: "春天", english: "spring"},
+                    {chinese: "夏天", english: "summer"},
+                    {chinese: "秋天", english: "autumn"},
+                    {chinese: "冬天", english: "winter"},
+                    {chinese: "天气", english: "weather"},
+                    {chinese: "晴朗的", english: "sunny"},
+                    {chinese: "太阳", english: "sun"},
+                    {chinese: "多云的", english: "cloudy"},
+                    {chinese: "云", english: "cloud"},
+                    {chinese: "有雨的", english: "rainy"},
+                    {chinese: "雨", english: "rain"},
+                    {chinese: "有风的", english: "windy"},
+                    {chinese: "风", english: "wind"},
+                    {chinese: "温暖的", english: "warm"},
+                    {chinese: "炎热的", english: "hot"},
+                    {chinese: "凉爽的", english: "cool"},
+                    {chinese: "寒冷的", english: "cold"},
+                    {chinese: "在外面", english: "outside"},
+                    {chinese: "雪人（单数）", english: "snowman"},
                     {chinese: "雪人（复数）", english: "snowmen"}
-			], 
-			phrases: [
-			
-			], 
-			sentences: [
-        			{chinese: "在春天，我喜欢在公园里骑自行车。", english: "In spring, I like riding my bicycle in the park."}，
-                    {chinese: "在夏天，我喜欢在水里游泳。", english: "In summer, I like swimming in the water."}，
-                    {chinese: "在秋天，我喜欢在公园里放风筝。", english: "In autumn, I like flying a kite in the park."}，
-                    {chinese: "在冬天，我喜欢滑冰和堆雪人。", english: "In winter, I like skating on the ice and making snowmen."}，
-                    {chinese: "你喜欢夏天么？不，我不喜欢。", english: "Do you like summer? No, I don’t."}，
-                    {chinese: "你喜欢冬天么？是的，我喜欢。", english: "Do you like winter? Yes, I do."}，
-                    {chinese: "春天舒服又温暖。", english: "Spring is nice and warm."}，
-                    {chinese: "夏天晴朗又炎热。", english: "Summer is sunny and hot."}，
-                    {chinese: "秋天多风又凉爽。", english: "Autumn is windy and cool."}，
-                    {chinese: "冬天多云又寒冷。", english: "Winter is cloudy and cold."}，
-                    {chinese: "你喜欢什么季节？我喜欢秋天。", english: "What season do you like? I like autumn."}，
-                    {chinese: "天气怎么样？", english: "How is the weather?"}，
+                ], 
+                phrases: [], 
+                sentences: [
+                    {chinese: "在春天，我喜欢在公园里骑自行车。", english: "In spring, I like riding my bicycle in the park."},
+                    {chinese: "在夏天，我喜欢在水里游泳。", english: "In summer, I like swimming in the water."},
+                    {chinese: "在秋天，我喜欢在公园里放风筝。", english: "In autumn, I like flying a kite in the park."},
+                    {chinese: "在冬天，我喜欢滑冰和堆雪人。", english: "In winter, I like skating on the ice and making snowmen."},
+                    {chinese: "你喜欢夏天么？不，我不喜欢。", english: "Do you like summer? No, I don't."},
+                    {chinese: "你喜欢冬天么？是的，我喜欢。", english: "Do you like winter? Yes, I do."},
+                    {chinese: "春天舒服又温暖。", english: "Spring is nice and warm."},
+                    {chinese: "夏天晴朗又炎热。", english: "Summer is sunny and hot."},
+                    {chinese: "秋天多风又凉爽。", english: "Autumn is windy and cool."},
+                    {chinese: "冬天多云又寒冷。", english: "Winter is cloudy and cold."},
+                    {chinese: "你喜欢什么季节？我喜欢秋天。", english: "What season do you like? I like autumn."},
+                    {chinese: "天气怎么样？", english: "How is the weather?"},
                     {chinese: "我最喜欢的季节是秋天。", english: "My favourite season is autumn."}
-			]
-			},
-            m3u2: {words: [], phrases: [], sentences: []},
-            m3u3: {words: [], phrases: [], sentences: []},
-            m4u1: {words: [], phrases: [], sentences: []},
-            m4u2: {words: [], phrases: [], sentences: []},
-            m4u3: {words: [], phrases: [], sentences: []}
+                ]
+            },
+            m3u2: {
+                words: [
+                    {chinese: "示例单词1", english: "example word 1"},
+                    {chinese: "示例单词2", english: "example word 2"}
+                ],
+                phrases: [
+                    {chinese: "示例词组1", english: "example phrase 1"}
+                ],
+                sentences: [
+                    {chinese: "示例句子1", english: "example sentence 1"}
+                ]
+            },
+            m3u3: {
+                words: [
+                    {chinese: "示例单词1", english: "example word 1"},
+                    {chinese: "示例单词2", english: "example word 2"}
+                ],
+                phrases: [
+                    {chinese: "示例词组1", english: "example phrase 1"}
+                ],
+                sentences: [
+                    {chinese: "示例句子1", english: "example sentence 1"}
+                ]
+            },
+            m4u1: {
+                words: [
+                    {chinese: "示例单词1", english: "example word 1"},
+                    {chinese: "示例单词2", english: "example word 2"}
+                ],
+                phrases: [
+                    {chinese: "示例词组1", english: "example phrase 1"}
+                ],
+                sentences: [
+                    {chinese: "示例句子1", english: "example sentence 1"}
+                ]
+            },
+            m4u2: {
+                words: [
+                    {chinese: "示例单词1", english: "example word 1"},
+                    {chinese: "示例单词2", english: "example word 2"}
+                ],
+                phrases: [
+                    {chinese: "示例词组1", english: "example phrase 1"}
+                ],
+                sentences: [
+                    {chinese: "示例句子1", english: "example sentence 1"}
+                ]
+            },
+            m4u3: {
+                words: [
+                    {chinese: "示例单词1", english: "example word 1"},
+                    {chinese: "示例单词2", english: "example word 2"}
+                ],
+                phrases: [
+                    {chinese: "示例词组1", english: "example phrase 1"}
+                ],
+                sentences: [
+                    {chinese: "示例句子1", english: "example sentence 1"}
+                ]
+            }
         };
 
         let currentModule = 'm1u1';
@@ -658,7 +874,6 @@
         function showAnswer(module, type) {
             const m = modules[module][type];
             m.answer.style.display = "block";
-            m.showAnswerBtn.style.display = "none";
         }
 
         // 标记为记住
@@ -683,7 +898,6 @@
                     m.chinese.textContent = m.words[m.currentIndex].chinese;
                     m.answer.textContent = m.words[m.currentIndex].english;
                     m.answer.style.display = "none";
-                    m.showAnswerBtn.style.display = "block";
                     m.progress.textContent = m.currentIndex + 1;
                 } else {
                     m.chinese.textContent = "已完成所有内容复习！";
@@ -724,7 +938,6 @@
                 m.chinese.textContent = m.words[m.currentIndex].chinese;
                 m.answer.textContent = m.words[m.currentIndex].english;
                 m.answer.style.display = "none";
-                m.showAnswerBtn.style.display = "block";
                 m.progress.textContent = m.currentIndex + 1;
             }
         }
@@ -739,6 +952,7 @@
                         }
                     });
                 });
+                notRememberedWords = [];
                 initModule(currentModule, currentType); // 刷新当前模块显示
             }
         }
@@ -766,7 +980,7 @@
                 // 添加到列表
                 Object.keys(groupedWords).forEach(module => {
                     const moduleTitle = document.createElement('li');
-                    moduleTitle.innerHTML = `<strong>${getModuleName(module)}</strong>`;
+                    moduleTitle.innerHTML = `<strong>${module.toUpperCase()}</strong>`;
                     listElement.appendChild(moduleTitle);
                     
                     Object.keys(groupedWords[module]).forEach(type => {
@@ -785,7 +999,7 @@
                 // 准备邮件内容
                 let emailContent = '';
                 Object.keys(groupedWords).forEach(module => {
-                    emailContent += `${getModuleName(module)}:\n`;
+                    emailContent += `${module.toUpperCase()}:\n`;
                     Object.keys(groupedWords[module]).forEach(type => {
                         emailContent += `  ${getTypeName(type)}:\n`;
                         groupedWords[module][type].forEach(word => {
@@ -799,15 +1013,6 @@
             
             document.getElementById('not-remembered-list').style.display = 'block';
             document.getElementById('email-form').style.display = 'block';
-        }
-
-        // 获取模块名称
-        function getModuleName(module) {
-            return module.toUpperCase() + ' ' + {
-                'words': '单词',
-                'phrases': '词组',
-                'sentences': '句子'
-            }[currentType];
         }
 
         // 获取类型名称
@@ -840,11 +1045,24 @@
         // 初始化事件监听器
         function initializeEventListeners() {
             const moduleIds = ['m1u1', 'm1u2', 'm1u3', 'm2u1', 'm2u2', 'm2u3', 'm3u1', 'm3u2', 'm3u3', 'm4u1', 'm4u2', 'm4u3'];
+            const types = ['words', 'phrases', 'sentences'];
             
             moduleIds.forEach(module => {
-                document.getElementById(`${module}-show-answer`).addEventListener('click', () => showAnswer(module, currentType));
-                document.getElementById(`${module}-remembered`).addEventListener('click', () => markAsRemembered(module, currentType));
-                document.getElementById(`${module}-not-remembered`).addEventListener('click', () => markAsNotRemembered(module, currentType));
+                types.forEach(type => {
+                    const showAnswerBtn = document.getElementById(`${module}-show-answer`);
+                    const rememberedBtn = document.getElementById(`${module}-remembered`);
+                    const notRememberedBtn = document.getElementById(`${module}-not-remembered`);
+                    
+                    if (showAnswerBtn) {
+                        showAnswerBtn.addEventListener('click', () => showAnswer(module, type));
+                    }
+                    if (rememberedBtn) {
+                        rememberedBtn.addEventListener('click', () => markAsRemembered(module, type));
+                    }
+                    if (notRememberedBtn) {
+                        notRememberedBtn.addEventListener('click', () => markAsNotRemembered(module, type));
+                    }
+                });
             });
         }
         
