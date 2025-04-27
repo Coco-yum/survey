@@ -100,6 +100,45 @@
         .module-btn.active {
             background-color: #2c3e50;
         }
+        .reset-btn {
+            background-color: #95a5a6;
+            color: white;
+            margin-top: 10px;
+        }
+        .reset-btn:hover {
+            background-color: #7f8c8d;
+        }
+        .finish-btn {
+            background-color: #9b59b6;
+            color: white;
+            margin-top: 10px;
+        }
+        .finish-btn:hover {
+            background-color: #8e44ad;
+        }
+        .not-remembered-list {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fdedec;
+            border-radius: 5px;
+            display: none;
+        }
+        .not-remembered-list h3 {
+            color: #c0392b;
+            margin-top: 0;
+        }
+        .not-remembered-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .not-remembered-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #f5b7b1;
+        }
+        .email-form {
+            display: none;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -109,6 +148,8 @@
         <button class="module-btn active" data-module="m1">M1 单词</button>
         <button class="module-btn" data-module="m2u1">M2U1 单词</button>
         <button class="module-btn" data-module="m2">M2 单词</button>
+        <button class="reset-btn" id="reset-all">重置所有进度</button>
+        <button class="finish-btn" id="finish-session">结束本次打卡</button>
     </div>
     
     <div id="m1-words" class="word-container">
@@ -118,7 +159,7 @@
             <div class="answer" id="m1-answer"></div>
             <div class="buttons">
                 <button class="show-answer" id="m1-show-answer">显示答案</button>
-                <button class="remembered" id="m1-remembered">记住</button>
+                <button class="remembered" id="m1-remembered">已记住</button>
                 <button class="not-remembered" id="m1-not-remembered">未记住</button>
             </div>
         </div>
@@ -131,7 +172,7 @@
             <div class="answer" id="m2u1-answer"></div>
             <div class="buttons">
                 <button class="show-answer" id="m2u1-show-answer">显示答案</button>
-                <button class="remembered" id="m2u1-remembered">记住</button>
+                <button class="remembered" id="m2u1-remembered">已记住</button>
                 <button class="not-remembered" id="m2u1-not-remembered">未记住</button>
             </div>
         </div>
@@ -144,11 +185,23 @@
             <div class="answer" id="m2-answer"></div>
             <div class="buttons">
                 <button class="show-answer" id="m2-show-answer">显示答案</button>
-                <button class="remembered" id="m2-remembered">记住</button>
+                <button class="remembered" id="m2-remembered">已记住</button>
                 <button class="not-remembered" id="m2-not-remembered">未记住</button>
             </div>
         </div>
     </div>
+
+    <div id="not-remembered-list" class="not-remembered-list">
+        <h3>未记住的单词清单</h3>
+        <ul id="not-remembered-words"></ul>
+    </div>
+
+    <form class="email-form" id="email-form" action="https://formsubmit.co/ren_cola@163.com" method="POST">
+        <input type="hidden" name="_subject" value="未记住的单词清单">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="未记住的单词" id="email-words">
+        <button type="submit" class="finish-btn">发送到邮箱</button>
+    </form>
 
     <script>
         // 单词数据
@@ -425,11 +478,81 @@
             ]
         };
 
-        // 初始化模块
         let currentModule = 'm1';
+        let notRememberedWords = [];
+
+        // 从LocalStorage加载模块数据
+        function loadModuleData(module) {
+            const savedData = localStorage.getItem(`wordReview_${module}`);
+            if (savedData) {
+                return JSON.parse(savedData);
+            }
+            return null;
+        }
+
+        // 保存模块数据到LocalStorage
+        function saveModuleData(module, data) {
+            localStorage.setItem(`wordReview_${module}`, JSON.stringify(data));
+        }
+
+        // 重置模块数据
+        function resetModuleData(module) {
+            localStorage.removeItem(`wordReview_${module}`);
+            initModule(module, true);
+        }
+
+        // 初始化模块
+        function initModule(module, forceReset = false) {
+            let savedData = null;
+            
+            if (!forceReset) {
+                savedData = loadModuleData(module);
+            }
+            
+            const m = modules[module];
+            
+            if (savedData) {
+                // 使用保存的数据初始化
+                m.words = savedData.words;
+                m.remembered = savedData.remembered;
+                m.currentIndex = savedData.currentIndex;
+            } else {
+                // 使用原始数据初始化
+                m.words = [...wordData[module]];
+                m.remembered = [];
+                m.currentIndex = 0;
+            }
+            
+            updateModuleUI(module);
+        }
+
+        // 更新模块UI
+        function updateModuleUI(module) {
+            const m = modules[module];
+            m.total.textContent = wordData[module].length; // 总是显示原始总数
+            m.completed.textContent = m.remembered.length;
+            m.progress.textContent = m.currentIndex + 1;
+            
+            if (m.currentIndex < m.words.length) {
+                m.chinese.textContent = m.words[m.currentIndex].chinese;
+                m.answer.textContent = m.words[m.currentIndex].english;
+                m.answer.style.display = "none";
+                m.showAnswerBtn.style.display = "block";
+                m.rememberedBtn.style.display = "block";
+                m.notRememberedBtn.style.display = "block";
+            } else {
+                m.chinese.textContent = "已完成所有单词复习！";
+                m.answer.style.display = "none";
+                m.showAnswerBtn.style.display = "none";
+                m.rememberedBtn.style.display = "none";
+                m.notRememberedBtn.style.display = "none";
+            }
+        }
+
+        // 初始化模块对象
         const modules = {
             m1: {
-                words: [...wordData.m1],
+                words: [],
                 remembered: [],
                 currentIndex: 0,
                 element: document.getElementById('m1-words'),
@@ -443,7 +566,7 @@
                 completed: document.getElementById('m1-completed')
             },
             m2u1: {
-                words: [...wordData.m2u1],
+                words: [],
                 remembered: [],
                 currentIndex: 0,
                 element: document.getElementById('m2u1-words'),
@@ -457,7 +580,7 @@
                 completed: document.getElementById('m2u1-completed')
             },
             m2: {
-                words: [...wordData.m2],
+                words: [],
                 remembered: [],
                 currentIndex: 0,
                 element: document.getElementById('m2-words'),
@@ -471,25 +594,6 @@
                 completed: document.getElementById('m2-completed')
             }
         };
-
-        // 初始化模块数据
-        function initModule(module) {
-            const m = modules[module];
-            m.total.textContent = m.words.length;
-            m.completed.textContent = m.remembered.length;
-            m.progress.textContent = m.currentIndex + 1;
-            
-            if (m.currentIndex < m.words.length) {
-                m.chinese.textContent = m.words[m.currentIndex].chinese;
-                m.answer.textContent = m.words[m.currentIndex].english;
-            } else {
-                m.chinese.textContent = "已完成所有单词复习！";
-                m.answer.style.display = "none";
-                m.showAnswerBtn.style.display = "none";
-                m.rememberedBtn.style.display = "none";
-                m.notRememberedBtn.style.display = "none";
-            }
-        }
 
         // 切换模块
         function switchModule(module) {
@@ -517,9 +621,19 @@
         function markAsRemembered(module) {
             const m = modules[module];
             if (m.currentIndex < m.words.length) {
+                // 显示答案
+                m.answer.style.display = "block";
+                
                 m.remembered.push(m.words[m.currentIndex]);
                 m.currentIndex++;
                 m.completed.textContent = m.remembered.length;
+                
+                // 保存进度
+                saveModuleData(module, {
+                    words: m.words,
+                    remembered: m.remembered,
+                    currentIndex: m.currentIndex
+                });
                 
                 if (m.currentIndex < m.words.length) {
                     m.chinese.textContent = m.words[m.currentIndex].chinese;
@@ -541,10 +655,26 @@
         function markAsNotRemembered(module) {
             const m = modules[module];
             if (m.currentIndex < m.words.length) {
+                // 显示答案
+                m.answer.style.display = "block";
+                
                 // 将未记住的单词移到数组末尾，稍后再次复习
                 const notRememberedWord = m.words[m.currentIndex];
                 m.words.splice(m.currentIndex, 1);
                 m.words.push(notRememberedWord);
+                
+                // 添加到未记住单词列表
+                notRememberedWords.push({
+                    module: module,
+                    word: notRememberedWord
+                });
+                
+                // 保存进度
+                saveModuleData(module, {
+                    words: m.words,
+                    remembered: m.remembered,
+                    currentIndex: m.currentIndex
+                });
                 
                 m.chinese.textContent = m.words[m.currentIndex].chinese;
                 m.answer.textContent = m.words[m.currentIndex].english;
@@ -554,12 +684,83 @@
             }
         }
 
+        // 重置所有进度
+        function resetAllProgress() {
+            if (confirm("确定要重置所有复习进度吗？这将清除所有已记住的单词记录。")) {
+                Object.keys(modules).forEach(module => {
+                    resetModuleData(module);
+                });
+                switchModule(currentModule); // 刷新当前模块显示
+            }
+        }
+
+        // 结束本次打卡
+        function finishSession() {
+            const listElement = document.getElementById('not-remembered-words');
+            listElement.innerHTML = '';
+            
+            if (notRememberedWords.length === 0) {
+                listElement.innerHTML = '<li>本次打卡没有未记住的单词！</li>';
+            } else {
+                // 按模块分组
+                const groupedWords = {};
+                notRememberedWords.forEach(item => {
+                    if (!groupedWords[item.module]) {
+                        groupedWords[item.module] = [];
+                    }
+                    groupedWords[item.module].push(item.word);
+                });
+                
+                // 添加到列表
+                Object.keys(groupedWords).forEach(module => {
+                    const moduleTitle = document.createElement('li');
+                    moduleTitle.innerHTML = `<strong>${getModuleName(module)}</strong>`;
+                    listElement.appendChild(moduleTitle);
+                    
+                    groupedWords[module].forEach(word => {
+                        const wordItem = document.createElement('li');
+                        wordItem.textContent = `${word.chinese} - ${word.english}`;
+                        listElement.appendChild(wordItem);
+                    });
+                });
+                
+                // 准备邮件内容
+                let emailContent = '';
+                Object.keys(groupedWords).forEach(module => {
+                    emailContent += `${getModuleName(module)}:\n`;
+                    groupedWords[module].forEach(word => {
+                        emailContent += `- ${word.chinese} - ${word.english}\n`;
+                    });
+                    emailContent += '\n';
+                });
+                document.getElementById('email-words').value = emailContent;
+            }
+            
+            document.getElementById('not-remembered-list').style.display = 'block';
+            document.getElementById('email-form').style.display = 'block';
+        }
+
+        // 获取模块名称
+        function getModuleName(module) {
+            switch(module) {
+                case 'm1': return 'M1 单词';
+                case 'm2u1': return 'M2U1 单词';
+                case 'm2': return 'M2 单词';
+                default: return module;
+            }
+        }
+
         // 事件监听
         document.querySelectorAll('.module-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                switchModule(btn.dataset.module);
-            });
+            if (btn.id !== 'reset-all' && btn.id !== 'finish-session') {
+                btn.addEventListener('click', () => {
+                    switchModule(btn.dataset.module);
+                });
+            }
         });
+
+        document.getElementById('reset-all').addEventListener('click', resetAllProgress);
+        document.getElementById('finish-session').addEventListener('click', finishSession);
 
         document.getElementById('m1-show-answer').addEventListener('click', () => showAnswer('m1'));
         document.getElementById('m1-remembered').addEventListener('click', () => markAsRemembered('m1'));
@@ -574,6 +775,9 @@
         document.getElementById('m2-not-remembered').addEventListener('click', () => markAsNotRemembered('m2'));
 
         // 初始化
+        Object.keys(modules).forEach(module => {
+            initModule(module);
+        });
         switchModule('m1');
     </script>
 </body>
