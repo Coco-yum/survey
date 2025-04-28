@@ -1123,27 +1123,15 @@
         // 初始化事件监听器
         function initializeEventListeners() {
             const moduleIds = ['m1u1', 'm1u2', 'm1u3', 'm2u1', 'm2u2', 'm2u3', 'm3u1', 'm3u2', 'm3u3', 'm4u1', 'm4u2', 'm4u3'];
-            const types = ['words', 'phrases', 'sentences'];
-            
-            moduleIds.forEach(module => {
-                types.forEach(type => {
-                    const showAnswerBtn = document.getElementById(`${module}-show-answer`);
-                    const rememberedBtn = document.getElementById(`${module}-remembered`);
-                    const notRememberedBtn = document.getElementById(`${module}-not-remembered`);
                     
-                    if (showAnswerBtn) {
-                        showAnswerBtn.addEventListener('click', () => showAnswer(module, type));
-                    }
-                    if (rememberedBtn) {
-                        rememberedBtn.addEventListener('click', () => markAsRemembered(module, type));
-                    }
-                    if (notRememberedBtn) {
-                        notRememberedBtn.addEventListener('click', () => markAsNotRemembered(module, type));
-                    }
-                });
+            moduleIds.forEach(module => {
+                document.getElementById(`${module}-show-answer`).addEventListener('click', () => showAnswer(module, currentType));
+                document.getElementById(`${module}-remembered`).addEventListener('click', () => markAsRemembered(module, currentType));
+                document.getElementById(`${module}-not-remembered`).addEventListener('click', () => markAsNotRemembered(module, currentType));
+
             });
         }
-        
+
         initializeEventListeners();
 
         // 初始化
