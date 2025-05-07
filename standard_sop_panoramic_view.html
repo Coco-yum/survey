@@ -110,6 +110,7 @@
 
         // Function to load data from CSV
         d3.csv("sop_data.csv").then(data => {
+            console.log("Loaded data:", data); // 输出加载的数据，用于调试
             // Convert data types and split tags
             data.forEach(d => {
                 d.id = +d.id;
@@ -405,4 +406,4 @@
     </script>
 </body>
 
-</html>    
+</html>
