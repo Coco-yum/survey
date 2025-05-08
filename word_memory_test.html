@@ -129,7 +129,7 @@
         let currentData;
 
         // Function to load data from CSV
-        d3.csv("sop_data.csv", { encoding: 'utf-8' }).then(data => {
+        d3.csv("sop_data.csv").then(data => {
             allData = data;
             currentData = allData;
             updateVisualization(currentData);
@@ -443,4 +443,4 @@
     </script>
 </body>
 
-</html>    
+</html>
