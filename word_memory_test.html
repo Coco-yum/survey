@@ -59,12 +59,27 @@
             font-size: 14px;
             max-width: 300px;
         }
+
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .filter-buttons button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <h1>标准SOP全景图</h1>
+        <div class="filter-buttons">
+            <button id="allFilter">全部</button>
+            <button id="completedFilter">已完成</button>
+        </div>
         <div id="graph"></div>
     </div>
 
@@ -74,7 +89,9 @@
         // Color scale for categories
         const categoryColors = {
             "临床": "#1f77b4",
-            "医管": "#ff7f0e"
+            "医管": "#ff7f0e",
+            "HIS": "#9467bd",
+            "医技": "#8c564b"
         };
 
         // Color scale for tags
@@ -108,8 +125,30 @@
 
         const tooltip = d3.select(".tooltip");
 
+        let allData;
+        let currentData;
+
         // Function to load data from CSV
-        d3.csv("sop_data.csv").then(data => {
+        d3.csv("sop_data.csv", { encoding: 'utf-8' }).then(data => {
+            allData = data;
+            currentData = allData;
+            updateVisualization(currentData);
+
+            // 筛选按钮事件监听
+            d3.select("#allFilter").on("click", () => {
+                currentData = allData;
+                updateVisualization(currentData);
+            });
+
+            d3.select("#completedFilter").on("click", () => {
+                currentData = allData.filter(d => d.status === "1");
+                updateVisualization(currentData);
+            });
+        }).catch(error => {
+            console.error("Error loading data:", error);
+        });
+
+        function updateVisualization(data) {
             // Convert data types and split tags
             data.forEach(d => {
                 d.id = +d.id;
@@ -240,6 +279,10 @@
                .force("x", d3.forceX().strength(d => d.type === 'category' || d.type === 'root' ? 0.1 : 0.05))
                .force("y", d3.forceY().strength(d => d.type === 'category' || d.type === 'root' ? 0.1 : 0.05));
 
+            // Remove existing links and nodes
+            svg.selectAll(".link").remove();
+            svg.selectAll(".node").remove();
+
             // Draw links
             const link = svg.append("g")
                .selectAll("line")
@@ -302,105 +345,100 @@
                 node
                    .attr("transform", d => `translate(${d.x},${d.y})`);
             });
+        }
 
-            // Tooltip functions
-            function showTooltip(event, d) {
-                tooltip.transition()
-                   .duration(200)
-                   .style("opacity", .9);
+        // Tooltip functions
+        function showTooltip(event, d) {
+            tooltip.transition()
+               .duration(200)
+               .style("opacity", .9);
 
-                if (d.type === 'sop') {
-                    const sopData = data.find(item => item.code === d.name);
-                    tooltip.html(`<strong>${d.name}</strong><br/>
-                                <strong>标题:</strong> ${d.title}<br/>
-                                <strong>分类:</strong> ${d.category}<br/>
-                                <strong>标签:</strong> ${d.tags.join(", ")}<br/>
-                                <strong>主要内容:</strong> ${d.mainContent}`);
-                } else if (d.type === 'category') {
-                    const count = data.filter(item => item.category === d.name).length;
-                    tooltip.html(`<strong>${d.name}</strong><br/>
-                                <strong>SOP数量:</strong> ${count}`);
-                } else if (d.type === 'root') {
-                    tooltip.html(`<strong>${d.name}</strong><br/>
-                                <strong>总SOP数量:</strong> ${data.length}`);
-                } else if (d.type === 'tag') {
-                    const count = data.filter(item => item.tags.includes(d.tag)).length;
-                    tooltip.html(`<strong>标签: ${d.tag}</strong><br/>
-                                <strong>关联SOP数量:</strong> ${count}`);
-                }
-
-                tooltip.style("left", (event.pageX + 10) + "px")
-                   .style("top", (event.pageY - 28) + "px");
+            if (d.type === 'sop') {
+                const sopData = currentData.find(item => item.code === d.name);
+                tooltip.html(`<strong>${d.name}</strong><br/>
+                            <strong>标题:</strong> ${d.title}<br/>
+                            <strong>分类:</strong> ${d.category}<br/>
+                            <strong>标签:</strong> ${d.tags.join(", ")}<br/>
+                            <strong>主要内容:</strong> ${d.mainContent}`);
+            } else if (d.type === 'category') {
+                const count = currentData.filter(item => item.category === d.name).length;
+                tooltip.html(`<strong>${d.name}</strong><br/>
+                            <strong>SOP数量:</strong> ${count}`);
+            } else if (d.type === 'root') {
+                tooltip.html(`<strong>${d.name}</strong><br/>
+                            <strong>总SOP数量:</strong> ${currentData.length}`);
+            } else if (d.type === 'tag') {
+                const count = currentData.filter(item => item.tags.includes(d.tag)).length;
+                tooltip.html(`<strong>标签: ${d.tag}</strong><br/>
+                            <strong>关联SOP数量:</strong> ${count}`);
             }
 
-            function hideTooltip() {
-                tooltip.transition()
-                   .duration(500)
-                   .style("opacity", 0);
-            }
+            tooltip.style("left", (event.pageX + 10) + "px")
+               .style("top", (event.pageY - 28) + "px");
+        }
 
-            // Click function to show full title
-            function clicked(event, d) {
-                if (d.type === 'sop') {
-                    const sopData = data.find(item => item.code === d.name);
-                    alert(`${d.name}: ${d.title}\n分类: ${d.category}\n标签: ${d.tags.join(", ")}\n主要内容: ${d.mainContent}`);
-                } else if (d.type === 'tag') {
-                    const relatedSops = data.filter(item => item.tags.includes(d.tag));
-                    alert(`标签: ${d.tag}\n关联SOP:\n${relatedSops.map(s => `${s.code}: ${s.title}`).join('\n')}`);
-                }
-            }
+        function hideTooltip() {
+            tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+        }
 
-            // Drag functions
-            function dragstarted(event, d) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
+        // Click function to show full title
+        function clicked(event, d) {
+            if (d.type === 'sop') {
+                const sopData = currentData.find(item => item.code === d.name);
+                alert(`${d.name}: ${d.title}\n分类: ${d.category}\n标签: ${d.tags.join(", ")}\n主要内容: ${d.mainContent}`);
+            } else if (d.type === 'tag') {
+                const relatedSops = currentData.filter(item => item.tags.includes(d.tag));
+                alert(`标签: ${d.tag}\n关联SOP:\n${relatedSops.map(s => `${s.code}: ${s.title}`).join('\n')}`);
+            }
+        }
+
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            if (d.type === 'root') {
                 d.fx = d.x;
                 d.fy = d.y;
             }
+        }
 
-            function dragged(event, d) {
-                d.fx = event.x;
-                d.fy = event.y;
+        // Double click function to unlock fixed position
+        function dblclicked(event, d) {
+            if (d.type === 'category' || d.type === 'sop' || d.type === 'tag') {
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const newWidth = window.innerWidth;
+            const newHeight = window.innerHeight - 60;
+
+            svg.attr("width", newWidth)
+               .attr("height", newHeight);
+
+            // Update root position if it's not fixed by dragging
+            const rootNode = nodes.find(n => n.type === 'root');
+            if (rootNode && rootNode.fx === undefined) {
+                rootNode.x = newWidth / 2;
+                rootNode.y = newHeight / 2;
             }
 
-            function dragended(event, d) {
-                if (!event.active) simulation.alphaTarget(0);
-                if (d.type === 'root') {
-                    d.fx = d.x;
-                    d.fy = d.y;
-                } else {
-                    d.fx = d.fx;
-                    d.fy = d.fy;
-                }
-            }
-
-            // Double click function to unlock fixed position
-            function dblclicked(event, d) {
-                if (d.type === 'category' || d.type === 'sop' || d.type === 'tag') {
-                    d.fx = null;
-                    d.fy = null;
-                }
-            }
-
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                const newWidth = window.innerWidth;
-                const newHeight = window.innerHeight - 60;
-
-                svg.attr("width", newWidth)
-                   .attr("height", newHeight);
-
-                // Update root position if it's not fixed by dragging
-                const rootNode = nodes.find(n => n.type === 'root');
-                if (rootNode && rootNode.fx === undefined) {
-                    rootNode.x = newWidth / 2;
-                    rootNode.y = newHeight / 2;
-                }
-
-                simulation.force("center", d3.forceCenter(newWidth / 2, newHeight / 2))
-                   .restart();
-            });
-        }).catch(error => {
-            console.error("Error loading data:", error);
+            simulation.force("center", d3.forceCenter(newWidth / 2, newHeight / 2))
+               .restart();
         });
     </script>
 </body>
