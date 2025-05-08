@@ -1,422 +1,411 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G2B单词复习打卡</title>
+    <title>标准SOP全景图</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
             background-color: #f5f5f5;
         }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-        }
-        .module-selector {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .chinese {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-        .answer {
-            display: none;
-            font-size: 20px;
-            color: #27ae60;
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #e8f5e9;
-            border-radius: 5px;
-        }
-        .buttons {
+
+        .container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background-color: white;
         }
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        .show-answer {
-            background-color: #3498db;
-            color: white;
-        }
-        .show-answer:hover {
-            background-color: #2980b9;
-        }
-        .remembered {
-            background-color: #2ecc71;
-            color: white;
-        }
-        .remembered:hover {
-            background-color: #27ae60;
-        }
-        .not-remembered {
-            background-color: #e74c3c;
-            color: white;
-        }
-        .not-remembered:hover {
-            background-color: #c0392b;
-        }
-        .progress {
-            margin-top: 20px;
+
+        h1 {
             text-align: center;
-            font-size: 18px;
-            color: #7f8c8d;
+            color: #333;
+            margin: 10px 0;
         }
-        .completed {
-            color: #27ae60;
+
+        #graph {
+            width: 100%;
+            height: calc(100vh - 60px);
+            flex-grow: 1;
+        }
+
+        .node {
+            cursor: pointer;
+        }
+
+        .node text {
+            font-size: 12px;
             font-weight: bold;
         }
-        .hidden {
-            display: none;
+
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
         }
-        .module-btn {
-            padding: 8px 15px;
-            margin: 5px;
-            background-color: #3498db;
-            color: white;
-            border: none;
+
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
             border-radius: 5px;
-            cursor: pointer;
-        }
-        .module-btn.active {
-            background-color: #2c3e50;
-        }
-        .reset-btn {
-            background-color: #95a5a6;
-            color: white;
-            margin-top: 10px;
-        }
-        .reset-btn:hover {
-            background-color: #7f8c8d;
+            pointer-events: none;
+            font-size: 14px;
+            max-width: 300px;
         }
     </style>
 </head>
+
 <body>
-    <h1>G2B单词复习打卡</h1>
-    
-    <div class="module-selector">
-        <button class="module-btn active" data-module="m1">M1 单词</button>
-        <button class="module-btn" data-module="m2u1">M2U1 单词</button>
-        <button class="module-btn" data-module="m2">M2 单词</button>
-        <button class="reset-btn" id="reset-all">重置所有进度</button>
+    <div class="container">
+        <h1>标准SOP全景图</h1>
+        <div id="graph"></div>
     </div>
-    
-    <div id="m1-words" class="word-container">
-        <div class="progress">进度: <span id="m1-progress">0</span>/<span id="m1-total">0</span> (<span id="m1-completed">0</span> 已记住)</div>
-        <div id="m1-card" class="card">
-            <div class="chinese" id="m1-chinese"></div>
-            <div class="answer" id="m1-answer"></div>
-            <div class="buttons">
-                <button class="show-answer" id="m1-show-answer">显示答案</button>
-                <button class="remembered" id="m1-remembered">记住</button>
-                <button class="not-remembered" id="m1-not-remembered">未记住</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="m2u1-words" class="word-container hidden">
-        <div class="progress">进度: <span id="m2u1-progress">0</span>/<span id="m2u1-total">0</span> (<span id="m2u1-completed">0</span> 已记住)</div>
-        <div id="m2u1-card" class="card">
-            <div class="chinese" id="m2u1-chinese"></div>
-            <div class="answer" id="m2u1-answer"></div>
-            <div class="buttons">
-                <button class="show-answer" id="m2u1-show-answer">显示答案</button>
-                <button class="remembered" id="m2u1-remembered">记住</button>
-                <button class="not-remembered" id="m2u1-not-remembered">未记住</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="m2-words" class="word-container hidden">
-        <div class="progress">进度: <span id="m2-progress">0</span>/<span id="m2-total">0</span> (<span id="m2-completed">0</span> 已记住)</div>
-        <div id="m2-card" class="card">
-            <div class="chinese" id="m2-chinese"></div>
-            <div class="answer" id="m2-answer"></div>
-            <div class="buttons">
-                <button class="show-answer" id="m2-show-answer">显示答案</button>
-                <button class="remembered" id="m2-remembered">记住</button>
-                <button class="not-remembered" id="m2-not-remembered">未记住</button>
-            </div>
-        </div>
-    </div>
+
+    <div class="tooltip" style="opacity: 0;"></div>
 
     <script>
-        // 单词数据
-        const wordData = {
-            m1: [
-                {chinese: "听（动作）", english: "listen"},
-                {chinese: "听见", english: "hear"},
-                {chinese: "看见", english: "see"},
-                {chinese: "看（动作）", english: "look"},
-                {chinese: "火车", english: "train"},
-                {chinese: "公交车", english: "bus"},
-                {chinese: "公交车（复数）", english: "buses"},
-                {chinese: "汽车", english: "car"},
-
-                {chinese: "道路", english: "road"}
-            ],
-            m2u1: [
-                {chinese: "喜欢", english: "like"},
-                {chinese: "跑", english: "run"},
-                {chinese: "跑（现在分词）", english: "running"},
-            ],
-            m2: [
-                {chinese: "跑", english: "run"},
-                {chinese: "滑冰", english: "skate"},
-                {chinese: "骑", english: "ride"},
-
-                {chinese: "美味的", english: "yummy"}
-            ]
+        // Color scale for categories
+        const categoryColors = {
+            "临床": "#1f77b4",
+            "医管": "#ff7f0e",
+            "HIS": "#9467bd",   
+            "医技": "#8c564b"
         };
 
-        // 从LocalStorage加载模块数据
-        function loadModuleData(module) {
-            const savedData = localStorage.getItem(`wordReview_${module}`);
-            if (savedData) {
-                return JSON.parse(savedData);
-            }
-            return null;
-        }
-
-        // 保存模块数据到LocalStorage
-        function saveModuleData(module, data) {
-            localStorage.setItem(`wordReview_${module}`, JSON.stringify(data));
-        }
-
-        // 重置模块数据
-        function resetModuleData(module) {
-            localStorage.removeItem(`wordReview_${module}`);
-            initModule(module, true);
-        }
-
-        // 初始化模块
-        function initModule(module, forceReset = false) {
-            let savedData = null;
-            
-            if (!forceReset) {
-                savedData = loadModuleData(module);
-            }
-            
-            const m = modules[module];
-            
-            if (savedData) {
-                // 使用保存的数据初始化
-                m.words = savedData.words;
-                m.remembered = savedData.remembered;
-                m.currentIndex = savedData.currentIndex;
-            } else {
-                // 使用原始数据初始化
-                m.words = [...wordData[module]];
-                m.remembered = [];
-                m.currentIndex = 0;
-            }
-            
-            updateModuleUI(module);
-        }
-
-        // 更新模块UI
-        function updateModuleUI(module) {
-            const m = modules[module];
-            m.total.textContent = wordData[module].length; // 总是显示原始总数
-            m.completed.textContent = m.remembered.length;
-            m.progress.textContent = m.currentIndex + 1;
-            
-            if (m.currentIndex < m.words.length) {
-                m.chinese.textContent = m.words[m.currentIndex].chinese;
-                m.answer.textContent = m.words[m.currentIndex].english;
-                m.answer.style.display = "none";
-                m.showAnswerBtn.style.display = "block";
-                m.rememberedBtn.style.display = "block";
-                m.notRememberedBtn.style.display = "block";
-            } else {
-                m.chinese.textContent = "已完成所有单词复习！";
-                m.answer.style.display = "none";
-                m.showAnswerBtn.style.display = "none";
-                m.rememberedBtn.style.display = "none";
-                m.notRememberedBtn.style.display = "none";
-            }
-        }
-
-        // 初始化模块对象
-        const modules = {
-            m1: {
-                words: [],
-                remembered: [],
-                currentIndex: 0,
-                element: document.getElementById('m1-words'),
-                chinese: document.getElementById('m1-chinese'),
-                answer: document.getElementById('m1-answer'),
-                showAnswerBtn: document.getElementById('m1-show-answer'),
-                rememberedBtn: document.getElementById('m1-remembered'),
-                notRememberedBtn: document.getElementById('m1-not-remembered'),
-                progress: document.getElementById('m1-progress'),
-                total: document.getElementById('m1-total'),
-                completed: document.getElementById('m1-completed')
-            },
-            m2u1: {
-                words: [],
-                remembered: [],
-                currentIndex: 0,
-                element: document.getElementById('m2u1-words'),
-                chinese: document.getElementById('m2u1-chinese'),
-                answer: document.getElementById('m2u1-answer'),
-                showAnswerBtn: document.getElementById('m2u1-show-answer'),
-                rememberedBtn: document.getElementById('m2u1-remembered'),
-                notRememberedBtn: document.getElementById('m2u1-not-remembered'),
-                progress: document.getElementById('m2u1-progress'),
-                total: document.getElementById('m2u1-total'),
-                completed: document.getElementById('m2u1-completed')
-            },
-            m2: {
-                words: [],
-                remembered: [],
-                currentIndex: 0,
-                element: document.getElementById('m2-words'),
-                chinese: document.getElementById('m2-chinese'),
-                answer: document.getElementById('m2-answer'),
-                showAnswerBtn: document.getElementById('m2-show-answer'),
-                rememberedBtn: document.getElementById('m2-remembered'),
-                notRememberedBtn: document.getElementById('m2-not-remembered'),
-                progress: document.getElementById('m2-progress'),
-                total: document.getElementById('m2-total'),
-                completed: document.getElementById('m2-completed')
-            }
+        // Color scale for tags
+        const tagColors = {
+            "抗菌": "#ff7f0e",
+            "药品": "#2ca02c",
+            "医保": "#9467bd",
+            "双通道": "#8c564b",
+            "GCP": "#7f7f7f",
+            "管理": "#1f77b4",
+            "特殊": "#bcbd22",
+            "患服": "#2ca02c",
+            "自理": "#d62728",
+            "自备": "#9467bd",
+            "基数药": "#8c564b",
+            "基础数据": "#e377c2",
+            "过敏": "#2ca02c",
+            "皮试": "#d62728",
+            "执行": "#17becf",
+            "权限": "#8c564b"
         };
 
-        // 切换模块
-        function switchModule(module) {
-            currentModule = module;
-            document.querySelectorAll('.word-container').forEach(el => {
-                el.classList.add('hidden');
-            });
-            document.querySelectorAll('.module-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            modules[module].element.classList.remove('hidden');
-            document.querySelector(`.module-btn[data-module="${module}"]`).classList.add('active');
-            initModule(module);
-        }
+        // Initialize the visualization
+        const width = window.innerWidth;
+        const height = window.innerHeight - 60; // Subtracting header height
 
-        // 显示答案
-        function showAnswer(module) {
-            const m = modules[module];
-            m.answer.style.display = "block";
-            m.showAnswerBtn.style.display = "none";
-        }
+        const svg = d3.select("#graph")
+           .append("svg")
+           .attr("width", width)
+           .attr("height", height);
 
-        // 标记为记住
-        function markAsRemembered(module) {
-            const m = modules[module];
-            if (m.currentIndex < m.words.length) {
-                m.remembered.push(m.words[m.currentIndex]);
-                m.currentIndex++;
-                m.completed.textContent = m.remembered.length;
-                
-                // 保存进度
-                saveModuleData(module, {
-                    words: m.words,
-                    remembered: m.remembered,
-                    currentIndex: m.currentIndex
+        const tooltip = d3.select(".tooltip");
+
+        // Function to load data from CSV
+        d3.csv("sop_data.csv").then(data => {
+            console.log("Loaded data:", data); // 输出加载的数据，用于调试
+            // Convert data types and split tags
+            data.forEach(d => {
+                d.id = +d.id;
+                d.tags = d.tags.split(',').map(tag => tag.trim());
+            });
+
+            // Get unique categories and tags
+            const categories = [...new Set(data.map(d => d.category))];
+            const allTags = [...new Set(data.flatMap(d => d.tags))];
+
+            // Calculate tag counts for radius scaling
+            const tagCounts = {};
+            allTags.forEach(tag => {
+                tagCounts[tag] = data.filter(d => d.tags.includes(tag)).length;
+            });
+
+            // Find max count for scaling
+            const maxCount = Math.max(...Object.values(tagCounts));
+            const minRadius = 25;  // 最小半径调整为25
+            const maxRadius = 40;  // 最大半径调整为40
+
+            // Create nodes and links
+            let nodes = [];
+            let links = [];
+
+            // Add root node
+            const rootNode = {
+                id: "标准SOP",
+                type: 'root',
+                name: "SOP",
+                color: "#333",
+                radius: 15,
+                x: width / 2,
+                y: height / 2
+            };
+            nodes.push(rootNode);
+
+            // Add category nodes and connect to root
+            categories.forEach((category, i) => {
+                const angle = (i / categories.length) * 2 * Math.PI;
+                const categoryNode = {
+                    id: category,
+                    type: 'category',
+                    name: category,
+                    color: categoryColors[category],
+                    radius: 35,
+                    x: width / 2 + Math.cos(angle) * 250,
+                    y: height / 2 + Math.sin(angle) * 250
+                };
+                nodes.push(categoryNode);
+                links.push({
+                    source: "标准SOP",
+                    target: category,
+                    type: 'category'
                 });
-                
-                if (m.currentIndex < m.words.length) {
-                    m.chinese.textContent = m.words[m.currentIndex].chinese;
-                    m.answer.textContent = m.words[m.currentIndex].english;
-                    m.answer.style.display = "none";
-                    m.showAnswerBtn.style.display = "block";
-                    m.progress.textContent = m.currentIndex + 1;
-                } else {
-                    m.chinese.textContent = "已完成所有单词复习！";
-                    m.answer.style.display = "none";
-                    m.showAnswerBtn.style.display = "none";
-                    m.rememberedBtn.style.display = "none";
-                    m.notRememberedBtn.style.display = "none";
+            });
+
+            // Add SOP nodes and connect to categories
+            data.forEach(sop => {
+                const sopNode = {
+                    id: sop.code,
+                    type: 'sop',
+                    name: sop.code,
+                    title: sop.title,
+                    category: sop.category,
+                    tags: sop.tags,
+                    mainContent: sop.mainContent,
+                    color: categoryColors[sop.category],
+                    radius: 30  // 固定SOP节点半径为30
+                };
+                nodes.push(sopNode);
+                links.push({
+                    source: sop.category,
+                    target: sop.code,
+                    type: 'sop'
+                });
+            });
+
+            // Create tag nodes and connect to SOPs
+            allTags.forEach(tag => {
+                const count = tagCounts[tag];
+                // Scale radius based on count
+                const radius = minRadius + (maxRadius - minRadius) * (count / maxCount);
+
+                const tagNode = {
+                    id: `tag_${tag}`,
+                    type: 'tag',
+                    name: tag,
+                    color: tagColors[tag],
+                    radius: radius,
+                    tag: tag
+                };
+                nodes.push(tagNode);
+
+                // Connect SOPs to tags
+                data.filter(d => d.tags.includes(tag)).forEach(sop => {
+                    links.push({
+                        source: sop.code,
+                        target: `tag_${tag}`,
+                        type: 'tag',
+                        tag: tag
+                    });
+                });
+            });
+
+            // Remove duplicate nodes
+            nodes = nodes.filter((node, index, self) =>
+                index === self.findIndex(n => n.id === node.id)
+            );
+
+            // Create force simulation
+            const simulation = d3.forceSimulation(nodes)
+               .force("link", d3.forceLink(links).id(d => d.id)
+                   .distance(d => {
+                        if (d.source === "标准SOP") return 250;
+                        if (d.type === 'tag') return 120;
+                        return 100;
+                    })
+                )
+               .force("charge", d3.forceManyBody().strength(d => {
+                    if (d.type === 'root') return -2000;
+                    if (d.type === 'category') return -1000;
+                    if (d.type === 'tag') return -500;
+                    return -100;
+                }))
+               .force("center", d3.forceCenter(width / 2, height / 2))
+               .force("collision", d3.forceCollide().radius(d => d.radius + 10))
+               .force("x", d3.forceX().strength(d => d.type === 'category' || d.type === 'root' ? 0.1 : 0.05))
+               .force("y", d3.forceY().strength(d => d.type === 'category' || d.type === 'root' ? 0.1 : 0.05));
+
+            // Draw links
+            const link = svg.append("g")
+               .selectAll("line")
+               .data(links)
+               .enter().append("line")
+               .attr("class", "link")
+               .attr("stroke-width", d => d.type === 'tag' ? 1 : 2)
+               .attr("stroke", d => d.type === 'tag' ? tagColors[d.tag] : "#999")
+               .attr("stroke-dasharray", d => d.type === 'tag' ? "2,2" : "0");
+
+            // Draw nodes
+            const node = svg.append("g")
+               .selectAll("g")
+               .data(nodes)
+               .enter().append("g")
+               .attr("class", "node")
+               .call(d3.drag()
+                   .on("start", dragstarted)
+                   .on("drag", dragged)
+                   .on("end", dragended));
+
+            // Add circles to nodes
+            node.append("circle")
+               .attr("r", d => d.radius)
+               .attr("fill", d => d.color)
+               .attr("stroke", d => d.type === 'tag' ? "#fff" : "none")
+               .attr("stroke-width", d => d.type === 'tag' ? 1 : 0)
+               .on("mouseover", showTooltip)
+               .on("mouseout", hideTooltip)
+               .on("click", clicked)
+               .on("dblclick", dblclicked);
+
+            // Add text to nodes
+            node.append("text")
+               .attr("dy", 4)
+               .attr("text-anchor", "middle")
+               .text(d => {
+                    if (d.type === 'root') return d.name;
+                    if (d.type === 'category') return d.name;
+                    if (d.type === 'tag') return d.name;
+                    return d.name; // SOP code
+                })
+               .attr("fill", d => d.type === 'tag' ? "#fff" : "white")
+               .attr("font-size", d => {
+                    if (d.type === 'root') return "16px";
+                    if (d.type === 'category') return "14px";
+                    if (d.type === 'tag') return "12px";
+                    return "10px";
+                })
+               .attr("font-weight", d => d.type === 'tag' ? "bold" : "normal");
+
+            // Update positions on simulation tick
+            simulation.on("tick", () => {
+                link
+                   .attr("x1", d => d.source.x)
+                   .attr("y1", d => d.source.y)
+                   .attr("x2", d => d.target.x)
+                   .attr("y2", d => d.target.y);
+
+                node
+                   .attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+
+            // Tooltip functions
+            function showTooltip(event, d) {
+                tooltip.transition()
+                   .duration(200)
+                   .style("opacity", .9);
+
+                if (d.type === 'sop') {
+                    const sopData = data.find(item => item.code === d.name);
+                    tooltip.html(`<strong>${d.name}</strong><br/>
+                                <strong>标题:</strong> ${d.title}<br/>
+                                <strong>分类:</strong> ${d.category}<br/>
+                                <strong>标签:</strong> ${d.tags.join(", ")}<br/>
+                                <strong>主要内容:</strong> ${d.mainContent}`);
+                } else if (d.type === 'category') {
+                    const count = data.filter(item => item.category === d.name).length;
+                    tooltip.html(`<strong>${d.name}</strong><br/>
+                                <strong>SOP数量:</strong> ${count}`);
+                } else if (d.type === 'root') {
+                    tooltip.html(`<strong>${d.name}</strong><br/>
+                                <strong>总SOP数量:</strong> ${data.length}`);
+                } else if (d.type === 'tag') {
+                    const count = data.filter(item => item.tags.includes(d.tag)).length;
+                    tooltip.html(`<strong>标签: ${d.tag}</strong><br/>
+                                <strong>关联SOP数量:</strong> ${count}`);
+                }
+
+                tooltip.style("left", (event.pageX + 10) + "px")
+                   .style("top", (event.pageY - 28) + "px");
+            }
+
+            function hideTooltip() {
+                tooltip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
+            }
+
+            // Click function to show full title
+            function clicked(event, d) {
+                if (d.type === 'sop') {
+                    const sopData = data.find(item => item.code === d.name);
+                    alert(`${d.name}: ${d.title}\n分类: ${d.category}\n标签: ${d.tags.join(", ")}\n主要内容: ${d.mainContent}`);
+                } else if (d.type === 'tag') {
+                    const relatedSops = data.filter(item => item.tags.includes(d.tag));
+                    alert(`标签: ${d.tag}\n关联SOP:\n${relatedSops.map(s => `${s.code}: ${s.title}`).join('\n')}`);
                 }
             }
-        }
 
-        // 标记为未记住
-        function markAsNotRemembered(module) {
-            const m = modules[module];
-            if (m.currentIndex < m.words.length) {
-                // 将未记住的单词移到数组末尾，稍后再次复习
-                const notRememberedWord = m.words[m.currentIndex];
-                m.words.splice(m.currentIndex, 1);
-                m.words.push(notRememberedWord);
-                
-                // 保存进度
-                saveModuleData(module, {
-                    words: m.words,
-                    remembered: m.remembered,
-                    currentIndex: m.currentIndex
-                });
-                
-                m.chinese.textContent = m.words[m.currentIndex].chinese;
-                m.answer.textContent = m.words[m.currentIndex].english;
-                m.answer.style.display = "none";
-                m.showAnswerBtn.style.display = "block";
-                m.progress.textContent = m.currentIndex + 1;
+            // Drag functions
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
             }
-        }
 
-        // 重置所有进度
-        function resetAllProgress() {
-            if (confirm("确定要重置所有复习进度吗？这将清除所有已记住的单词记录。")) {
-                Object.keys(modules).forEach(module => {
-                    resetModuleData(module);
-                });
-                switchModule(currentModule); // 刷新当前模块显示
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
             }
-        }
 
-        // 事件监听
-        document.querySelectorAll('.module-btn').forEach(btn => {
-            if (btn.id !== 'reset-all') {
-                btn.addEventListener('click', () => {
-                    switchModule(btn.dataset.module);
-                });
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                if (d.type === 'root') {
+                    d.fx = d.x;
+                    d.fy = d.y;
+                } else {
+                    d.fx = d.fx;
+                    d.fy = d.fy;
+                }
             }
+
+            // Double click function to unlock fixed position
+            function dblclicked(event, d) {
+                if (d.type === 'category' || d.type === 'sop' || d.type === 'tag') {
+                    d.fx = null;
+                    d.fy = null;
+                }
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const newWidth = window.innerWidth;
+                const newHeight = window.innerHeight - 60;
+
+                svg.attr("width", newWidth)
+                   .attr("height", newHeight);
+
+                // Update root position if it's not fixed by dragging
+                const rootNode = nodes.find(n => n.type === 'root');
+                if (rootNode && rootNode.fx === undefined) {
+                    rootNode.x = newWidth / 2;
+                    rootNode.y = newHeight / 2;
+                }
+
+                simulation.force("center", d3.forceCenter(newWidth / 2, newHeight / 2))
+                   .restart();
+            });
+        }).catch(error => {
+            console.error("Error loading data:", error);
         });
-
-        document.getElementById('reset-all').addEventListener('click', resetAllProgress);
-
-        document.getElementById('m1-show-answer').addEventListener('click', () => showAnswer('m1'));
-        document.getElementById('m1-remembered').addEventListener('click', () => markAsRemembered('m1'));
-        document.getElementById('m1-not-remembered').addEventListener('click', () => markAsNotRemembered('m1'));
-
-        document.getElementById('m2u1-show-answer').addEventListener('click', () => showAnswer('m2u1'));
-        document.getElementById('m2u1-remembered').addEventListener('click', () => markAsRemembered('m2u1'));
-        document.getElementById('m2u1-not-remembered').addEventListener('click', () => markAsNotRemembered('m2u1'));
-
-        document.getElementById('m2-show-answer').addEventListener('click', () => showAnswer('m2'));
-        document.getElementById('m2-remembered').addEventListener('click', () => markAsRemembered('m2'));
-        document.getElementById('m2-not-remembered').addEventListener('click', () => markAsNotRemembered('m2'));
-
-        // 初始化
-        Object.keys(modules).forEach(module => {
-            initModule(module);
-        });
-        switchModule('m1');
     </script>
 </body>
+
 </html>
