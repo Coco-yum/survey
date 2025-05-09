@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP 标签管理系统</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-box {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .tag-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tag-filter span {
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .tag-filter span.active {
+            background-color: #3498db;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tag {
+            background-color: #e0e0e0;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .tag-remove {
+            margin-left: 5px;
+            cursor: pointer;
+            color: #777;
+        }
+        .tag-remove:hover {
+            color: #333;
+        }
+        .tag-input {
+            display: flex;
+            align-items: center;
+        }
+        .tag-input input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 5px;
+            width: 120px;
+        }
+        .tag-input button {
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .tag-input button:hover {
+            background-color: #2980b9;
+        }
+        .export-btn {
+            padding: 8px 15px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .export-btn:hover {
+            background-color: #219653;
+        }
+        .new-tag-input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 150px;
+        }
+        .add-tag-btn {
+            padding: 5px 10px;
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .add-tag-btn:hover {
+            background-color: #8e44ad;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        .submit-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #219653;
+        }
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            .controls {
+                flex-direction: column;
+            }
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SOP 标签管理系统</h1>
+        
+        <div class="controls">
+            <input type="text" id="search" class="search-box" placeholder="搜索编号或规划主题...">
+            <div>
+                <input type="text" id="newTag" class="new-tag-input" placeholder="新标签名称">
+                <button id="addTagBtn" class="add-tag-btn">添加标签</button>
+            </div>
+            <button id="exportBtn" class="export-btn">导出数据并发送邮件</button>
+        </div>
+        
+        <div class="tag-filter" id="tagFilter"></div>
+        
+        <div id="status" class="status"></div>
+        
+        <table id="sopTable">
+            <thead>
+                <tr>
+                    <th width="5%">序</th>
+                    <th width="20%">编号</th>
+                    <th width="40%">规划主题</th>
+                    <th width="35%">标签</th>
+                </tr>
+            </thead>
+            <tbody id="sopTableBody">
+                <!-- 表格内容将通过JavaScript动态生成 -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 导出数据模态框 -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>导出数据并发送邮件</h2>
+            <form id="exportForm" action="https://formsubmit.co/ren_cola@163.com" method="POST">
+                <!-- FormSubmit.co 配置 -->
+                <input type="hidden" name="_subject" value="SOP标签数据导出">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you.html">
+                
+                <div class="form-group">
+                    <label for="senderName">您的姓名</label>
+                    <input type="text" id="senderName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="senderEmail">您的邮箱</label>
+                    <input type="email" id="senderEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">附加消息</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+                <input type="hidden" id="exportData" name="export_data">
+                <button type="submit" class="submit-btn">发送邮件</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // SOP数据（省略具体内容，只保留结构）
+        const sopData = [
+            { id: 1, code: "SOP-01", title: "抗菌药品医嘱在临床应用V2.0", tags: [] },
+            { id: 2, code: "SOP-05", title: "双通道药品业务流程", tags: [] },
+            { id: 3, code: "SOP-34", title: "GCP患者门诊住院业务流程", tags: [] },
+            { id: 4, code: "SOP-66", title: "优惠规则应用方案", tags: [] },
+            { id: 5, code: "SOP-06", title: "自理药业务流程应用", tags: [] },
+            { id: 6, code: "SOP-07", title: "自备药管理及业务应用", tags: [] },
+            { id: 7, code: "SOP-10", title: "基数药管理模式", tags: [] },
+            { id: 8, code: "SOP-18", title: "药品异常情况下临床业务适配应用", tags: [] },
+            { id: 9, code: "SOP-19", title: "收费项目增调停后业务适配方案", tags: [] },
+            { id: 10, code: "SOP-36", title: "日间化疗SOP", tags: [] },
+            { id: 11, code: "SOP-75", title: "过敏与皮试业务流程V2.0", tags: [] },
+            { id: 12, code: "SOP-14", title: "不拆零药品管理模式及应用", tags: [] },
+            { id: 13, code: "SOP-67", title: "住院患者权限管控", tags: [] },
+            { id: 14, code: "SOP-94", title: "门诊血透流程及应用", tags: [] },
+            { id: 15, code: "SOP-29", title: "术中用药模式及应用", tags: [] },
+            { id: 16, code: "SOP-74", title: "慢特病流程", tags: [] },
+            { id: 17, code: "SOP-78", title: "检查申请单打折方案", tags: [] },
+            { id: 18, code: "SOP-91", title: "医技病理申请单流程及业务应用V2.0", tags: [] },
+            { id: 19, code: "SOP-96", title: "无纸化归档（病案）建设方案及业务应用推荐", tags: [] },
+            { id: 20, code: "SOP-09", title: "精麻毒管理模式", tags: [] },
+            { id: 21, code: "SOP-79", title: "先诊疗后付费流程", tags: [] },
+            { id: 22, code: "SOP-92", title: "医技输血申请单流程及业务应用V2.0", tags: [] },
+            { id: 23, code: "SOP-03", title: "抗肿瘤药品医嘱在临床应用", tags: [] },
+            { id: 24, code: "SOP-27", title: "术中病理业务流程及应用", tags: [] },
+            { id: 25, code: "SOP-70", title: "住院患者欠费管理V2.0", tags: [] },
+            { id: 26, code: "SOP-21", title: "低值耗材实时核销模式及应用", tags: [] },
+            { id: 27, code: "SOP-28", title: "术中输血业务流程及应用", tags: [] },
+            { id: 28, code: "SOP-42", title: "病区申请计费模式及应用", tags: [] },
+            { id: 29, code: "SOP-93", title: "检验采血费、管子费用收取", tags: [] },
+            { id: 30, code: "SOP-98", title: "母婴同床(含分床分开）", tags: [] },
+            { id: 31, code: "SOP-08", title: "临购药业务流程应用", tags: [] },
+            { id: 32, code: "SOP-37", title: "预住院流程", tags: [] },
+            { id: 33, code: "SOP-100", title: "住院计费总场景", tags: [] },
+            { id: 34, code: "SOP-38", title: "院前医嘱转住院", tags: [] },
+            { id: 35, code: "SOP-39", title: "院前费用转住院", tags: [] },
+            { id: 36, code: "SOP-41", title: "病区自动滚费管理模式及应用", tags: [] },
+            { id: 37, code: "SOP-43", title: "住院执行计费模式及应用", tags: [] },
+            { id: 38, code: "SOP-47", title: "医嘱联动费用模式应用", tags: [] },
+            { id: 39, code: "SOP-80", title: "特需多价格流程", tags: [] },
+            { id: 40, code: "SOP-16", title: "临床指定医嘱执行时间的业务应用", tags: [] },
+            { id: 41, code: "SOP-32", title: "患者标签管理模式及业务应用", tags: [] },
+            { id: 42, code: "SOP-25", title: "术中检验业务流程及应用", tags: [] },
+            { id: 43, code: "SOP-73", title: "高客/IP流程", tags: [] },
+            { id: 44, code: "SOP-35", title: "日间手术SOP", tags: [] },
+            { id: 45, code: "SOP-77", title: "绿色通道流程", tags: [] },
+            { id: 46, code: "SOP-99", title: "手术计费", tags: [] },
+            { id: 47, code: "SOP-20", title: "低值耗材非实时核销模式及应用", tags: [] },
+            { id: 48, code: "SOP-57", title: "医嘱申请模式管理及业务应用", tags: [] },
+            { id: 49, code: "SOP-76", title: "医保适应症审批流程", tags: [] },
+            { id: 50, code: "SOP-26", title: "术中检查业务流程及应用", tags: [] },
+            { id: 51, code: "SOP-89", title: "不合格标本管理流程", tags: [] },
+            { id: 52, code: "SOP-15", title: "变动剂量药品管理模式及应用", tags: [] },
+            { id: 53, code: "SOP-17", title: "住院长期中药饮片管理模式及应用", tags: [] },
+            { id: 54, code: "SOP-31", title: "介入手术、麻醉类手术业务流程及应用", tags: [] },
+            { id: 55, code: "SOP-33", title: "医嘱流向管理及业务应用", tags: [] },
+            { id: 56, code: "SOP-58", title: "医嘱PDA执行模式管理及业务应用", tags: [] },
+            { id: 57, code: "SOP-63", title: "肠内医嘱业务流程", tags: [] },
+            { id: 58, code: "SOP-48", title: "医嘱联动医嘱模式及应用", tags: [] },
+            { id: 59, code: "SOP-65", title: "住院血透流程业务流程", tags: [] },
+            { id: 60, code: "SOP-82", title: "会诊业务流程", tags: [] },
+            { id: 61, code: "SOP-11", title: "静配管理模式及应用", tags: [] },
+            { id: 62, code: "SOP-12", title: "病区药品领药模式及领药数量计算规则", tags: [] },
+            { id: 63, code: "SOP-13", title: "门诊长处方流程", tags: [] },
+            { id: 64, code: "SOP-60", title: "医疗组管理及业务应用归属", tags: [] },
+            { id: 65, code: "SOP-71", title: "TPN医嘱业务流程", tags: [] },
+            { id: 66, code: "SOP-50", title: "检验申请单分单合单规则应用", tags: [] },
+            { id: 67, code: "SOP-22", title: "高值耗材管理模式及应用", tags: [] },
+            { id: 68, code: "SOP-23", title: "检验服务套的推荐模式及应用", tags: [] },
+            { id: 69, code: "SOP-24", title: "检验合管分管规则及应用", tags: [] },
+            { id: 70, code: "SOP-62", title: "病区计费规则及互斥规则", tags: [] },
+            { id: 71, code: "SOP-64", title: "胃肠镜整体业务解决方案", tags: [] },
+            { id: 72, code: "SOP-87", title: "检查预约管理", tags: [] },
+            { id: 73, code: "SOP-85", title: "急诊长医嘱管理", tags: [] },
+            { id: 74, code: "SOP-40", title: "急诊手术转住院SOP", tags: [] },
+            { id: 75, code: "SOP-46", title: "患者出区召回模式及业务应用", tags: [] },
+            { id: 76, code: "SOP-51", title: "医嘱停止校验逻辑及业务应用", tags: [] },
+            { id: 77, code: "SOP-59", title: "跨服务接诊管理及业务应用", tags: [] },
+            { id: 78, code: "SOP-68", title: "患者爽约等黑白名单管理", tags: [] },
+            { id: 79, code: "SOP-56", title: "医技收费应用场景及业务应用", tags: [] },
+            { id: 80, code: "SOP-54", title: "药品黑白名单管理及业务应用", tags: [] },
+            { id: 81, code: "SOP-72", title: "门诊诊区分诊", tags: [] },
+            { id: 82, code: "SOP-45", title: "患者出区校验规则及业务应用", tags: [] },
+            { id: 83, code: "SOP-49", title: "检查申请单分单合单规则应用", tags: [] },
+            { id: 84, code: "SOP-55", title: "药品分方规则管理及业务应用", tags: [] },
+            { id: 85, code: "SOP-61", title: "CA在业务系统中的应用场景及落地应用", tags: [] },
+            { id: 86, code: "SOP-53", title: "医嘱联动文书管理及业务应用", tags: [] },
+            { id: 87, code: "SOP-52", title: "医嘱合规性校验规则及业务应用", tags: [] },
+            { id: 88, code: "SOP-88", title: "危急值管理流程V2.0", tags: [] },
+            { id: 89, code: "SOP-97", title: "门诊 住院收费项去重，只计费一次", tags: [] },
+            { id: 90, code: "SOP-90", title: "转运交接流程", tags: [] }
+        ];
+
+        // 从本地存储加载数据
+        function loadData() {
+            const savedData = localStorage.getItem('sopTagData');
+            if (savedData) {
+                return JSON.parse(savedData);
+            }
+            return sopData;
+        }
+
+        // 保存数据到本地存储
+        function saveData(data) {
+            localStorage.setItem('sopTagData', JSON.stringify(data));
+        }
+
+        // 初始化应用
+        let appData = loadData();
+        let allTags = getAllTags();
+        let activeFilterTags = [];
+
+        // 获取所有标签
+        function getAllTags() {
+            const tags = new Set();
+            appData.forEach(item => {
+                item.tags.forEach(tag => tags.add(tag));
+            });
+            return Array.from(tags).sort();
+        }
+
+        // 渲染表格
+        function renderTable(data = appData) {
+            const tableBody = document.getElementById('sopTableBody');
+            tableBody.innerHTML = '';
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // 序号
+                const idCell = document.createElement('td');
+                idCell.textContent = item.id;
+                row.appendChild(idCell);
+                
+                // 编号
+                const codeCell = document.createElement('td');
+                codeCell.textContent = item.code;
+                row.appendChild(codeCell);
+                
+                // 标题
+                const titleCell = document.createElement('td');
+                titleCell.textContent = item.title;
+                row.appendChild(titleCell);
+                
+                // 标签
+                const tagsCell = document.createElement('td');
+                const tagsContainer = document.createElement('div');
+                tagsContainer.className = 'tags';
+                
+                // 显示已有标签
+                item.tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'tag';
+                    tagElement.innerHTML = `${tag} <span class="tag-remove" data-tag="${tag}" data-id="${item.id}">×</span>`;
+                    tagsContainer.appendChild(tagElement);
+                });
+                
+                // 添加标签输入框
+                const tagInputContainer = document.createElement('div');
+                tagInputContainer.className = 'tag-input';
+                
+                const tagInput = document.createElement('input');
+                tagInput.type = 'text';
+                tagInput.placeholder = '添加标签';
+                tagInput.dataset.id = item.id;
+                
+                const addTagBtn = document.createElement('button');
+                addTagBtn.textContent = '+';
+                addTagBtn.dataset.id = item.id;
+                
+                tagInputContainer.appendChild(tagInput);
+                tagInputContainer.appendChild(addTagBtn);
+                tagsContainer.appendChild(tagInputContainer);
+                
+                tagsCell.appendChild(tagsContainer);
+                row.appendChild(tagsCell);
+                
+                tableBody.appendChild(row);
+            });
+
+            // 添加事件监听器
+            addEventListeners();
+        }
+
+        // 渲染标签过滤器
+        function renderTagFilter() {
+            const tagFilter = document.getElementById('tagFilter');
+            tagFilter.innerHTML = '';
+            
+            allTags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.textContent = tag;
+                tagElement.dataset.tag = tag;
+                
+                if (activeFilterTags.includes(tag)) {
+                    tagElement.classList.add('active');
+                }
+                
+                tagFilter.appendChild(tagElement);
+            });
+        }
+
+        // 添加事件监听器
+        function addEventListeners() {
+            // 标签删除按钮
+            document.querySelectorAll('.tag-remove').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = parseInt(this.dataset.id);
+                    const tagToRemove = this.dataset.tag;
+                    
+                    appData = appData.map(item => {
+                        if (item.id === itemId) {
+                            return {
+                                ...item,
+                                tags: item.tags.filter(tag => tag !== tagToRemove)
+                            };
+                        }
+                        return item;
+                    });
+                    
+                    saveData(appData);
+                    allTags = getAllTags();
+                    renderTable();
+                    renderTagFilter();
+                });
+            });
+            
+            // 添加标签按钮
+            document.querySelectorAll('.tag-input button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = parseInt(this.dataset.id);
+                    const input = this.previousElementSibling;
+                    const newTag = input.value.trim();
+                    
+                    if (newTag) {
+                        appData = appData.map(item => {
+                            if (item.id === itemId && !item.tags.includes(newTag)) {
+                                return {
+                                    ...item,
+                                    tags: [...item.tags, newTag]
+                                };
+                            }
+                            return item;
+                        });
+                        
+                        saveData(appData);
+                        allTags = getAllTags();
+                        renderTable();
+                        renderTagFilter();
+                        input.value = '';
+                    }
+                });
+            });
+            
+            // 标签输入框回车事件
+            document.querySelectorAll('.tag-input input').forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const itemId = parseInt(this.dataset.id);
+                        const newTag = this.value.trim();
+                        
+                        if (newTag) {
+                            appData = appData.map(item => {
+                                if (item.id === itemId && !item.tags.includes(newTag)) {
+                                    return {
+                                        ...item,
+                                        tags: [...item.tags, newTag]
+                                    };
+                                }
+                                return item;
+                            });
+                            
+                            saveData(appData);
+                            allTags = getAllTags();
+                            renderTable();
+                            renderTagFilter();
+                            this.value = '';
+                        }
+                    }
+                });
+            });
+            
+            // 标签过滤器点击事件
+            document.querySelectorAll('#tagFilter span').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const tagName = this.dataset.tag;
+                    
+                    if (activeFilterTags.includes(tagName)) {
+                        activeFilterTags = activeFilterTags.filter(t => t !== tagName);
+                        this.classList.remove('active');
+                    } else {
+                        activeFilterTags.push(tagName);
+                        this.classList.add('active');
+                    }
+                    
+                    filterTable();
+                });
+            });
+            
+            // 搜索框事件
+            document.getElementById('search').addEventListener('input', function() {
+                filterTable();
+            });
+            
+            // 添加新标签按钮
+            document.getElementById('addTagBtn').addEventListener('click', addNewTag);
+            
+            // 导出按钮
+            document.getElementById('exportBtn').addEventListener('click', openExportModal);
+            
+            // 模态框关闭按钮
+            document.querySelector('.close').addEventListener('click', closeModal);
+            
+            // 表单提交前准备数据
+            document.getElementById('exportForm').addEventListener('submit', function() {
+                const exportData = JSON.stringify(appData, null, 2);
+                document.getElementById('exportData').value = exportData;
+                showStatus('正在发送邮件...', 'success');
+            });
+        }
+
+        // 过滤表格
+        function filterTable() {
+            const searchText = document.getElementById('search').value.toLowerCase();
+            let filteredData = appData;
+            
+            // 应用搜索过滤
+            if (searchText) {
+                filteredData = filteredData.filter(item => 
+                    item.code.toLowerCase().includes(searchText) || 
+                    item.title.toLowerCase().includes(searchText)
+                );
+            }
+            
+            // 应用标签过滤
+            if (activeFilterTags.length > 0) {
+                filteredData = filteredData.filter(item => 
+                    activeFilterTags.every(tag => item.tags.includes(tag))
+                );
+            }
+            
+            renderTable(filteredData);
+        }
+
+        // 添加新标签
+        function addNewTag() {
+            const newTagInput = document.getElementById('newTag');
+            const newTag = newTagInput.value.trim();
+            
+            if (newTag) {
+                if (!allTags.includes(newTag)) {
+                    allTags.push(newTag);
+                    allTags.sort();
+                    renderTagFilter();
+                    newTagInput.value = '';
+                    showStatus(`标签 "${newTag}" 已添加`, 'success');
+                } else {
+                    showStatus(`标签 "${newTag}" 已存在`, 'error');
+                }
+            }
+        }
+
+        // 打开导出模态框
+        function openExportModal() {
+            const modal = document.getElementById('exportModal');
+            modal.style.display = 'block';
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            const modal = document.getElementById('exportModal');
+            modal.style.display = 'none';
+        }
+
+        // 显示状态消息
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = 'status ' + type;
+            
+            setTimeout(() => {
+                statusElement.style.opacity = '0';
+                setTimeout(() => {
+                    statusElement.className = 'status';
+                    statusElement.style.opacity = '1';
+                }, 500);
+            }, 3000);
+        }
+
+        // 初始化应用
+        renderTable();
+        renderTagFilter();
+    </script>
+</body>
+</html>
