@@ -57,9 +57,6 @@
             background-color: #3498db;
             color: white;
         }
-        .tag-filter span:hover {
-            background-color: #d0d0d0;
-        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -99,21 +96,19 @@
             cursor: pointer;
             color: #777;
         }
-        .tag-remove:hover {
-            color: #333;
-        }
         .tag-input-container {
             position: relative;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
-        .tag-input input {
+        .tag-input {
             padding: 5px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-right: 5px;
             width: 120px;
         }
-        .tag-input button {
+        .tag-add-btn {
             padding: 5px 10px;
             background-color: #3498db;
             color: white;
@@ -121,11 +116,10 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .tag-input button:hover {
-            background-color: #2980b9;
-        }
         .tag-suggestions {
             position: absolute;
+            top: 100%;
+            left: 0;
             background: white;
             border: 1px solid #ddd;
             max-height: 150px;
@@ -133,15 +127,10 @@
             z-index: 100;
             width: 120px;
             display: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .tag-suggestion {
             padding: 5px;
             cursor: pointer;
-            font-size: 12px;
-        }
-        .tag-suggestion:hover {
-            background-color: #f0f0f0;
         }
         .export-btn {
             padding: 8px 15px;
@@ -150,10 +139,6 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
-        }
-        .export-btn:hover {
-            background-color: #219653;
         }
         .new-tag-input {
             padding: 5px;
@@ -168,10 +153,6 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
-        }
-        .add-tag-btn:hover {
-            background-color: #8e44ad;
         }
         .status {
             margin-top: 20px;
@@ -197,71 +178,20 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background-color: rgba(0,0,0,0.4);
         }
         .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
             padding: 20px;
-            border: 1px solid #888;
             width: 80%;
-            max-width: 600px;
+            max-width: 500px;
             border-radius: 8px;
         }
         .close {
-            color: #aaa;
             float: right;
-            font-size: 28px;
-            font-weight: bold;
             cursor: pointer;
-        }
-        .close:hover {
-            color: black;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .form-group textarea {
-            height: 150px;
-            resize: vertical;
-        }
-        .submit-btn {
-            background-color: #27ae60;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .submit-btn:hover {
-            background-color: #219653;
-        }
-        @media (max-width: 768px) {
-            table {
-                display: block;
-                overflow-x: auto;
-            }
-            .controls {
-                flex-direction: column;
-            }
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
+            font-size: 24px;
         }
     </style>
 </head>
@@ -291,44 +221,27 @@
                     <th width="40%">标签</th>
                 </tr>
             </thead>
-            <tbody id="sopTableBody">
-                <!-- 表格内容将通过JavaScript动态生成 -->
-            </tbody>
+            <tbody id="sopTableBody"></tbody>
         </table>
     </div>
 
-    <!-- 导出数据模态框 -->
     <div id="exportModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>导出数据并发送邮件</h2>
+            <h2>确认发送邮件</h2>
+            <p>数据将直接发送到 ren_cola@163.com</p>
             <form id="exportForm" action="https://formsubmit.co/ren_cola@163.com" method="POST">
-                <!-- FormSubmit.co 配置 -->
                 <input type="hidden" name="_subject" value="SOP标签数据导出">
                 <input type="hidden" name="_template" value="table">
                 <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you.html">
-                
-                <div class="form-group">
-                    <label for="senderName">您的姓名</label>
-                    <input type="text" id="senderName" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="senderEmail">您的邮箱</label>
-                    <input type="email" id="senderEmail" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">附加消息</label>
-                    <textarea id="message" name="message"></textarea>
-                </div>
                 <input type="hidden" id="exportData" name="export_data">
-                <button type="submit" class="submit-btn">发送邮件</button>
+                <button type="submit" class="export-btn">确认发送</button>
             </form>
         </div>
     </div>
 
     <script>
-        // SOP数据（示例结构）
+        // 示例数据
         const sopData = [
             { id: 1, code: "SOP-01", title: "抗菌药品医嘱在临床应用V2.0", tags: [] },
             { id: 2, code: "SOP-05", title: "双通道药品业务流程", tags: [] },
@@ -336,284 +249,152 @@
             // ...其他SOP项...
         ];
 
-        // 从本地存储加载数据
-        function loadData() {
-            const savedData = localStorage.getItem('sopTagData');
-            if (savedData) {
-                return JSON.parse(savedData);
-            }
-            return sopData;
-        }
-
-        // 保存数据到本地存储
-        function saveData(data) {
-            localStorage.setItem('sopTagData', JSON.stringify(data));
-        }
-
-        // 初始化应用
-        let appData = loadData();
+        // 状态管理
+        let appData = JSON.parse(localStorage.getItem('sopTagData')) || sopData;
         let allTags = getAllTags();
         let activeFilterTags = [];
 
         // 获取所有标签
         function getAllTags() {
             const tags = new Set();
-            appData.forEach(item => {
-                item.tags.forEach(tag => tags.add(tag));
-            });
+            appData.forEach(item => item.tags.forEach(tag => tags.add(tag)));
             return Array.from(tags).sort();
         }
 
         // 渲染表格
         function renderTable(data = appData) {
             const tableBody = document.getElementById('sopTableBody');
-            tableBody.innerHTML = '';
-
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                
-                // 序号
-                const idCell = document.createElement('td');
-                idCell.textContent = item.id;
-                row.appendChild(idCell);
-                
-                // 编号
-                const codeCell = document.createElement('td');
-                codeCell.textContent = item.code;
-                row.appendChild(codeCell);
-                
-                // 标题
-                const titleCell = document.createElement('td');
-                titleCell.textContent = item.title;
-                row.appendChild(titleCell);
-                
-                // 标签
-                const tagsCell = document.createElement('td');
-                const tagsContainer = document.createElement('div');
-                tagsContainer.className = 'tags';
-                
-                // 显示已有标签
-                item.tags.forEach(tag => {
-                    const tagElement = document.createElement('span');
-                    tagElement.className = 'tag';
-                    tagElement.innerHTML = `${tag} <span class="tag-remove" data-tag="${tag}" data-id="${item.id}">×</span>`;
-                    tagsContainer.appendChild(tagElement);
-                });
-                
-                // 添加标签输入框（带建议功能）
-                const tagInputContainer = document.createElement('div');
-                tagInputContainer.className = 'tag-input-container';
-                tagInputContainer.innerHTML = `
-                    <input type="text" placeholder="添加标签" data-id="${item.id}">
-                    <div class="tag-suggestions"></div>
-                    <button data-id="${item.id}">+</button>
-                `;
-                tagsContainer.appendChild(tagInputContainer);
-                
-                tagsCell.appendChild(tagsContainer);
-                row.appendChild(tagsCell);
-                
-                tableBody.appendChild(row);
-            });
-
-            // 添加事件监听器
+            tableBody.innerHTML = data.map(item => `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.code}</td>
+                    <td>${item.title}</td>
+                    <td>
+                        <div class="tags">
+                            ${item.tags.map(tag => `
+                                <span class="tag">
+                                    ${tag}
+                                    <span class="tag-remove" data-tag="${tag}" data-id="${item.id}">×</span>
+                                </span>
+                            `).join('')}
+                            <div class="tag-input-container">
+                                <input type="text" class="tag-input" placeholder="添加标签" data-id="${item.id}">
+                                <div class="tag-suggestions"></div>
+                                <button class="tag-add-btn" data-id="${item.id}">+</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
             addEventListeners();
         }
 
         // 渲染标签过滤器
         function renderTagFilter() {
             const tagFilter = document.getElementById('tagFilter');
-            tagFilter.innerHTML = '';
-            
-            allTags.forEach(tag => {
-                const tagElement = document.createElement('span');
-                tagElement.textContent = tag;
-                tagElement.dataset.tag = tag;
-                
-                if (activeFilterTags.includes(tag)) {
-                    tagElement.classList.add('active');
-                }
-                
-                tagFilter.appendChild(tagElement);
-            });
+            tagFilter.innerHTML = allTags.map(tag => `
+                <span data-tag="${tag}">${tag}</span>
+            `).join('');
         }
 
-        // ==================== 新增功能1：标签快捷复用 ====================
-        function setupTagReuse() {
-            document.querySelectorAll('#tagFilter span').forEach(tag => {
-                tag.addEventListener('click', function(e) {
-                    const tagName = this.dataset.tag;
-                    
-                    // Ctrl+点击快速填充标签
-                    if (e.ctrlKey || e.metaKey) {
-                        const focusedInput = document.querySelector('.tag-input-container input:focus');
-                        if (focusedInput) {
-                            focusedInput.value = tagName;
-                            focusedInput.focus();
-                            showStatus(`标签 "${tagName}" 已准备就绪，按Enter添加`, 'success');
-                        }
-                    } 
-                    // 正常点击保持筛选功能
-                    else {
-                        if (activeFilterTags.includes(tagName)) {
-                            activeFilterTags = activeFilterTags.filter(t => t !== tagName);
-                            this.classList.remove('active');
-                        } else {
-                            activeFilterTags.push(tagName);
-                            this.classList.add('active');
-                        }
-                        filterTable();
-                    }
-                });
-            });
-        }
-
-        // ==================== 新增功能2：标签输入提示 ====================
-        function setupTagSuggestions() {
-            document.addEventListener('click', function(e) {
-                // 点击非输入框区域时关闭所有下拉框
-                if (!e.target.matches('.tag-input-container input')) {
-                    document.querySelectorAll('.tag-suggestions').forEach(d => {
-                        d.style.display = 'none';
-                    });
-                }
-            });
-
-            // 动态生成的输入框需要事件委托
-            document.addEventListener('input', function(e) {
-                if (e.target.matches('.tag-input-container input')) {
-                    const input = e.target;
-                    const suggestions = input.nextElementSibling;
-                    const val = input.value.trim().toLowerCase();
-                    
-                    if (val) {
-                        suggestions.innerHTML = allTags
-                            .filter(tag => tag.toLowerCase().includes(val))
-                            .map(tag => `<div class="tag-suggestion">${tag}</div>`)
-                            .join('');
-                        suggestions.style.display = 'block';
-                    } else {
-                        suggestions.style.display = 'none';
-                    }
-                }
-            });
-
-            // 点击建议标签
-            document.addEventListener('click', function(e) {
-                if (e.target.matches('.tag-suggestion')) {
-                    const input = e.target.closest('.tag-input-container').querySelector('input');
-                    input.value = e.target.textContent;
-                    input.focus();
-                    e.target.closest('.tag-suggestions').style.display = 'none';
-                }
-            });
-        }
-
-        // 添加事件监听器
+        // 添加事件监听
         function addEventListeners() {
-            // 标签删除按钮
-            document.querySelectorAll('.tag-remove').forEach(button => {
-                button.addEventListener('click', function() {
-                    const itemId = parseInt(this.dataset.id);
-                    const tagToRemove = this.dataset.tag;
-                    
-                    appData = appData.map(item => {
-                        if (item.id === itemId) {
-                            return {
-                                ...item,
-                                tags: item.tags.filter(tag => tag !== tagToRemove)
-                            };
-                        }
-                        return item;
-                    });
-                    
-                    saveData(appData);
-                    allTags = getAllTags();
-                    renderTable();
-                    renderTagFilter();
-                });
-            });
-            
-            // 添加标签按钮
-            document.querySelectorAll('.tag-input-container button').forEach(button => {
-                button.addEventListener('click', function() {
+            // 标签添加按钮
+            document.querySelectorAll('.tag-add-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
                     const itemId = parseInt(this.dataset.id);
                     const input = this.previousElementSibling.previousElementSibling;
-                    const newTag = input.value.trim();
-                    
-                    if (newTag) {
-                        appData = appData.map(item => {
-                            if (item.id === itemId && !item.tags.includes(newTag)) {
-                                return {
-                                    ...item,
-                                    tags: [...item.tags, newTag]
-                                };
-                            }
-                            return item;
-                        });
-                        
-                        saveData(appData);
-                        allTags = getAllTags();
-                        renderTable();
-                        renderTagFilter();
+                    const tagName = input.value.trim();
+                    if (tagName) {
+                        addTagToItem(itemId, tagName);
                         input.value = '';
-                        input.focus();
                     }
                 });
             });
-            
-            // 标签输入框回车事件
-            document.querySelectorAll('.tag-input-container input').forEach(input => {
+
+            // 输入框回车事件
+            document.querySelectorAll('.tag-input').forEach(input => {
                 input.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         const itemId = parseInt(this.dataset.id);
-                        const newTag = this.value.trim();
-                        
-                        if (newTag) {
-                            appData = appData.map(item => {
-                                if (item.id === itemId && !item.tags.includes(newTag)) {
-                                    return {
-                                        ...item,
-                                        tags: [...item.tags, newTag]
-                                    };
-                                }
-                                return item;
-                            });
-                            
-                            saveData(appData);
-                            allTags = getAllTags();
-                            renderTable();
-                            renderTagFilter();
+                        const tagName = this.value.trim();
+                        if (tagName) {
+                            addTagToItem(itemId, tagName);
                             this.value = '';
-                            this.focus();
                         }
                     }
                 });
             });
-            
-            // 搜索框事件
-            document.getElementById('search').addEventListener('input', function() {
-                filterTable();
+
+            // 标签删除按钮
+            document.querySelectorAll('.tag-remove').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = parseInt(this.dataset.id);
+                    const tagName = this.dataset.tag;
+                    removeTagFromItem(itemId, tagName);
+                });
             });
-            
-            // 添加新标签按钮
-            document.getElementById('addTagBtn').addEventListener('click', addNewTag);
-            
-            // 导出按钮
-            document.getElementById('exportBtn').addEventListener('click', openExportModal);
-            
-            // 模态框关闭按钮
-            document.querySelector('.close').addEventListener('click', closeModal);
-            
-            // 表单提交前准备数据
-            document.getElementById('exportForm').addEventListener('submit', function() {
-                const exportData = JSON.stringify(appData, null, 2);
-                document.getElementById('exportData').value = exportData;
-                showStatus('正在发送邮件...', 'success');
+
+            // 标签筛选
+            document.querySelectorAll('#tagFilter span').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const tagName = this.dataset.tag;
+                    if (activeFilterTags.includes(tagName)) {
+                        activeFilterTags = activeFilterTags.filter(t => t !== tagName);
+                        this.classList.remove('active');
+                    } else {
+                        activeFilterTags.push(tagName);
+                        this.classList.add('active');
+                    }
+                    filterTable();
+                });
             });
+
+            // 搜索框
+            document.getElementById('search').addEventListener('input', filterTable);
         }
 
-        // 过滤表格
+        // 添加标签到项目
+        function addTagToItem(itemId, tagName) {
+            if (!tagName) return;
+
+            appData = appData.map(item => {
+                if (item.id === itemId && !item.tags.includes(tagName)) {
+                    return {...item, tags: [...item.tags, tagName]};
+                }
+                return item;
+            });
+
+            // 如果是新标签，添加到全局
+            if (!allTags.includes(tagName)) {
+                allTags.push(tagName);
+                allTags.sort();
+                renderTagFilter();
+            }
+
+            saveData();
+            renderTable();
+            showStatus(`已添加标签 "${tagName}"`, 'success');
+        }
+
+        // 从项目移除标签
+        function removeTagFromItem(itemId, tagName) {
+            appData = appData.map(item => {
+                if (item.id === itemId) {
+                    return {...item, tags: item.tags.filter(t => t !== tagName)};
+                }
+                return item;
+            });
+
+            saveData();
+            allTags = getAllTags();
+            renderTable();
+            renderTagFilter();
+            showStatus(`已移除标签 "${tagName}"`, 'success');
+        }
+
+        // 筛选表格
         function filterTable() {
             const searchText = document.getElementById('search').value.toLowerCase();
             let filteredData = appData;
@@ -636,60 +417,58 @@
             renderTable(filteredData);
         }
 
-        // 添加新标签
-        function addNewTag() {
-            const newTagInput = document.getElementById('newTag');
-            const newTag = newTagInput.value.trim();
-            
-            if (newTag) {
-                if (!allTags.includes(newTag)) {
-                    allTags.push(newTag);
-                    allTags.sort();
-                    renderTagFilter();
-                    newTagInput.value = '';
-                    showStatus(`标签 "${newTag}" 已添加`, 'success');
-                } else {
-                    showStatus(`标签 "${newTag}" 已存在`, 'error');
-                }
-            }
-        }
-
-        // 打开导出模态框
-        function openExportModal() {
-            const modal = document.getElementById('exportModal');
-            modal.style.display = 'block';
-        }
-
-        // 关闭模态框
-        function closeModal() {
-            const modal = document.getElementById('exportModal');
-            modal.style.display = 'none';
+        // 保存数据
+        function saveData() {
+            localStorage.setItem('sopTagData', JSON.stringify(appData));
         }
 
         // 显示状态消息
         function showStatus(message, type) {
-            const statusElement = document.getElementById('status');
-            statusElement.textContent = message;
-            statusElement.className = 'status ' + type;
-            
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
             setTimeout(() => {
-                statusElement.style.opacity = '0';
+                status.style.opacity = '0';
                 setTimeout(() => {
-                    statusElement.className = 'status';
-                    statusElement.style.opacity = '1';
+                    status.className = 'status';
+                    status.style.opacity = '1';
                 }, 500);
             }, 3000);
         }
 
-        // 初始化应用
-        function init() {
-            renderTable();
-            renderTagFilter();
-            setupTagReuse();    // 启用标签快捷复用
-            setupTagSuggestions(); // 启用标签输入提示
-        }
+        // 初始化
+        document.getElementById('addTagBtn').addEventListener('click', function() {
+            const newTag = document.getElementById('newTag').value.trim();
+            if (newTag && !allTags.includes(newTag)) {
+                allTags.push(newTag);
+                allTags.sort();
+                renderTagFilter();
+                document.getElementById('newTag').value = '';
+                showStatus(`全局标签 "${newTag}" 已添加`, 'success');
+            }
+        });
 
-        init();
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            const exportData = appData.map(item => ({
+                Code: item.code,
+                Tags: item.tags.join(', ')
+            }));
+            
+            document.getElementById('exportData').value = JSON.stringify({
+                title: "SOP标签汇总",
+                data: exportData
+            }, null, 2);
+            
+            document.getElementById('exportModal').style.display = 'block';
+        });
+
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('exportModal').style.display = 'none';
+        });
+
+        // 初始化渲染
+        renderTable();
+        renderTagFilter();
     </script>
 </body>
 </html>
