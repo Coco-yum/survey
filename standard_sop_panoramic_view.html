@@ -73,30 +73,22 @@
     <script>
         // Color scale for categories
         const categoryColors = {
-            "临床": "#1f77b4",
-            "医管": "#ff7f0e",
-            "HIS": "#9467bd",   
-            "医技": "#8c564b"
-        };
+    "临床": "#1f77b4",
+    "医管": "#ff7f0e",
+    "HIS": "#9467bd",   
+    "医技": "#8c564b"
+};
 
-        // Color scale for tags
-        const tagColors = {
-            "抗菌": "#ff7f0e",
-            "药品": "#2ca02c",
-            "医保": "#9467bd",
-            "双通道": "#8c564b",
-            "GCP": "#7f7f7f",
-            "管理": "#1f77b4",
-            "特殊": "#bcbd22",
-            "患服": "#2ca02c",
-            "自理": "#d62728",
-            "自备": "#9467bd",
-            "基数药": "#8c564b",
-            "基础数据": "#e377c2",
-            "过敏": "#2ca02c",
-            "皮试": "#d62728",
-            "执行": "#17becf",
-            "权限": "#8c564b"
+const tagColors = {
+    // 高频标签（出现多次）
+    "药品": "#2ca02c",
+    "费用": "#d62728",
+    "执行": "#17becf",
+    "医嘱": "#e377c2",
+    "医保": "#7f7f7f",
+    "手术": "#bcbd22",
+    "检查": "#8c9eff",
+    "病理": "#ff9896"
         };
 
         // Initialize the visualization
